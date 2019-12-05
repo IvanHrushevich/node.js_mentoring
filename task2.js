@@ -1,8 +1,8 @@
-const fs = require('fs');
-const stream = require('stream');
-const util = require('util');
+import fs from 'fs';
+import stream from 'stream';
+import util from 'util';
 
-const csv = require('csvtojson');
+import csv from 'csvtojson';
 
 const pipeline = util.promisify(stream.pipeline);
 const csvFilePath = './csv/task-2-table.csv';
