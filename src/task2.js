@@ -5,8 +5,8 @@ import util from 'util';
 import csv from 'csvtojson';
 
 const pipeline = util.promisify(stream.pipeline);
-const csvFilePath = './csv/task-2-table.csv';
-const txtFilePath = './task-2-table.txt';
+const csvFilePath = './src/csv/task-2-table.csv';
+const txtFilePath = './src/task-2-table.txt';
 
 async function convertCsvToJson() {
   await pipeline(
