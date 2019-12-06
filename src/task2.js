@@ -11,7 +11,13 @@ const txtFilePath = './src/task-2-table.txt';
 pipeline(
   fs.createReadStream(csvFilePath),
   csv({
-    ignoreColumns: /Amount/
+    headers: ['book', 'author', 'amount', 'price'],
+    colParser: {
+      book: 'string',
+      author: 'string',
+      amount: 'omit',
+      price: 'number'
+    }
   }),
   fs.createWriteStream(txtFilePath)
 ).catch(err => console.error('error: ', err));
