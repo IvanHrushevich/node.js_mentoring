@@ -1,4 +1,5 @@
 import express from 'express';
+import uuid from 'uuid/v1';
 
 const app = express();
 const port = 3000;
@@ -29,6 +30,8 @@ useersRouter.get('/', (req, res) => res.json(users));
 
 useersRouter.post('/', (req, res) => {
   const user = req.body;
+  const id = uuid();
+  user.id = id;
   user.isDeleted = false;
   users[user.id] = user;
 
