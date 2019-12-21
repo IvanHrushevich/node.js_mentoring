@@ -22,16 +22,30 @@ useersRouter.get('/:id', (req, res) => {
   const id = req.params.id;
   const user = users[id];
 
-  return user ? res.json(user) : res.sendStatus(404);
+  return user && user.isDeleted === false ? res.json(user) : res.sendStatus(404);
 });
 
 useersRouter.get('/', (req, res) => res.json(users));
 
 useersRouter.post('/', (req, res) => {
   const user = req.body;
-  console.log('user', user);
+  user.isDeleted = false;
   users[user.id] = user;
-  res.sendStatus(200);
+
+  return res.sendStatus(200);
+});
+
+useersRouter.delete('/:id', (req, res) => {
+  const id = req.params.id;
+  const user = users[id];
+
+  if (user && user.isDeleted === false) {
+    user.isDeleted = true;
+
+    return res.sendStatus(200);
+  } else {
+    return res.sendStatus(404);
+  }
 });
 
 app.use('/users', useersRouter);
