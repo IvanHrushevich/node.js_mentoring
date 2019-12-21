@@ -16,19 +16,19 @@ const users = {
 
 app.listen(port, () => console.log(`Users app listening on port ${port}!`));
 
-const useersRouter = express.Router();
-useersRouter.use(express.json());
+const usersRouter = express.Router();
+usersRouter.use(express.json());
 
-useersRouter.get('/:id', (req, res) => {
+usersRouter.get('/:id', (req, res) => {
   const id = req.params.id;
   const user = users[id];
 
   return user && user.isDeleted === false ? res.json(user) : res.sendStatus(404);
 });
 
-useersRouter.get('/', (req, res) => res.json(users));
+usersRouter.get('/', (req, res) => res.json(users));
 
-useersRouter.post('/', (req, res) => {
+usersRouter.post('/', (req, res) => {
   const user = req.body;
   const id = uuid();
   user.id = id;
@@ -38,7 +38,24 @@ useersRouter.post('/', (req, res) => {
   return res.sendStatus(200);
 });
 
-useersRouter.delete('/:id', (req, res) => {
+usersRouter.put('/:id', (req, res) => {
+  const id = req.params.id;
+  let user = users[id];
+  const updatedUser = req.body;
+
+  if (user && user.isDeleted === false) {
+    users[id] = {
+      ...user,
+      ...updatedUser
+    };
+
+    return res.sendStatus(200);
+  } else {
+    return res.sendStatus(404);
+  }
+});
+
+usersRouter.delete('/:id', (req, res) => {
   const id = req.params.id;
   const user = users[id];
 
@@ -51,4 +68,4 @@ useersRouter.delete('/:id', (req, res) => {
   }
 });
 
-app.use('/users', useersRouter);
+app.use('/users', usersRouter);
