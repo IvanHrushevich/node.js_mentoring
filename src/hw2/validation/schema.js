@@ -1,5 +1,7 @@
 import Joi from '@hapi/joi';
 
+const regLettersAndNumbers = new RegExp('^(?=.*[a-zA-Z])(?=.*[0-9])');
+
 export const schema = Joi.object({
   age: Joi.number()
     .integer()
@@ -10,6 +12,6 @@ export const schema = Joi.object({
   login: Joi.string().required(),
 
   password: Joi.string()
-    .alphanum()
+    .pattern(regLettersAndNumbers)
     .required()
 });

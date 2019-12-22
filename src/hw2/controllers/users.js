@@ -60,19 +60,29 @@ export const postUser = (req, res) => {
 };
 
 export const putUserById = (req, res) => {
-  const id = req.params.id;
-  let user = users[id];
   const updatedUser = req.body;
 
-  if (user && user.isDeleted === false) {
-    users[id] = {
-      ...user,
-      ...updatedUser
-    };
+  const { error } = schema.validate(updatedUser, {
+    abortEarly: false,
+    allowUnknown: false
+  });
 
-    return res.sendStatus(200);
+  if (error) {
+    return res.status(400).json(errorResponse(error.details));
   } else {
-    return res.sendStatus(404);
+    const id = req.params.id;
+    let user = users[id];
+
+    if (user && user.isDeleted === false) {
+      users[id] = {
+        ...user,
+        ...updatedUser
+      };
+
+      return res.sendStatus(200);
+    } else {
+      return res.sendStatus(404);
+    }
   }
 };
 
