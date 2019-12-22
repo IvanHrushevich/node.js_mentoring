@@ -19,6 +19,25 @@ app.listen(port, () => console.log(`Users app listening on port ${port}!`));
 const usersRouter = express.Router();
 usersRouter.use(express.json());
 
+// request example: http://localhost:3000/users/filter?login=iv&limit=5
+usersRouter.get('/filter', (req, res) => {
+  const searchStr = req.query.login;
+  const limit = req.query.limit;
+
+  const filteredUserList = getAutoSuggestUsers(searchStr, limit);
+
+  if (filteredUserList.length) {
+    const filteredUsers = filteredUserList.reduce((acc, curr) => {
+      acc[curr.id] = curr;
+      return acc;
+    }, {});
+
+    return res.json(filteredUsers);
+  } else {
+    return res.sendStatus(404);
+  }
+});
+
 usersRouter.get('/:id', (req, res) => {
   const id = req.params.id;
   const user = users[id];
@@ -69,3 +88,10 @@ usersRouter.delete('/:id', (req, res) => {
 });
 
 app.use('/users', usersRouter);
+
+const getAutoSuggestUsers = (searchStr, limit) => {
+  const userList = Object.values(users);
+  const filteredUserList = userList.filter(user => user.login.includes(searchStr)).slice(0, limit);
+
+  return filteredUserList;
+};
