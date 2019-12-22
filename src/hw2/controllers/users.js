@@ -91,7 +91,10 @@ export const deleteUserById = (req, res) => {
 
 const getAutoSuggestUsers = (searchStr, limit) => {
   const userList = Object.values(users);
-  const filteredUserList = userList.filter(user => user.login.includes(searchStr)).slice(0, limit);
+  const filteredUserList = userList
+    .filter(user => user.login.includes(searchStr))
+    .sort((user1, user2) => user1.login > user2.login)
+    .slice(0, limit);
 
   return filteredUserList;
 };
