@@ -1,6 +1,8 @@
 import express from 'express';
 import uuid from 'uuid/v1';
 
+import { schema, errorResponse } from './validation/index';
+
 const app = express();
 const port = 3000;
 
@@ -49,12 +51,22 @@ usersRouter.get('/', (req, res) => res.json(users));
 
 usersRouter.post('/', (req, res) => {
   const user = req.body;
-  const id = uuid();
-  user.id = id;
-  user.isDeleted = false;
-  users[user.id] = user;
 
-  return res.sendStatus(200);
+  const { error } = schema.validate(user, {
+    abortEarly: false,
+    allowUnknown: false
+  });
+
+  if (error) {
+    return res.status(400).json(errorResponse(error.details));
+  } else {
+    const id = uuid();
+    user.id = id;
+    user.isDeleted = false;
+    users[user.id] = user;
+
+    return res.sendStatus(200);
+  }
 });
 
 usersRouter.put('/:id', (req, res) => {
