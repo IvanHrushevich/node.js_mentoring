@@ -7,7 +7,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "task1": "nodemon --exec babel-node src/hw1/task1",
         "task2": "nodemon --exec babel-node src/hw1/task2",
-        "task3": "nodemon --exec babel-node src/hw2/app"
+        "task3": "nodemon --exec babel-node src/hw2/app",
+        "lint.task3": "eslint src/hw2/**"
     },
     "author": "",
     "license": "ISC",
