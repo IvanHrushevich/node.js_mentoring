@@ -1,6 +1,6 @@
 import uuid from 'uuid/v1';
 
-import { schema, errorResponse } from '../validation/index';
+import { userSchema, errorResponse } from '../validation/index';
 
 const users = {
     1: {
@@ -50,7 +50,7 @@ export const getUsers = (req, res) => {
 export const postUser = (req, res) => {
     const user = req.body;
 
-    const { error } = schema.validate(user, {
+    const { error } = userSchema.validate(user, {
         abortEarly: false,
         allowUnknown: false
     });
@@ -70,7 +70,7 @@ export const postUser = (req, res) => {
 export const putUserById = (req, res) => {
     const updatedUser = req.body;
 
-    const { error } = schema.validate(updatedUser, {
+    const { error } = userSchema.validate(updatedUser, {
         abortEarly: false,
         allowUnknown: false
     });

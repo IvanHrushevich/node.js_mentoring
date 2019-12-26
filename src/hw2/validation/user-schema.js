@@ -2,7 +2,7 @@ import Joi from '@hapi/joi';
 
 const regLettersAndNumbers = new RegExp('^(?=.*[a-zA-Z])(?=.*[0-9])');
 
-export const schema = Joi.object({
+export const userSchema = Joi.object({
     age: Joi.number()
         .integer()
         .min(4)
