@@ -100,7 +100,13 @@ export const deleteUserById = (req, res) => {
     }
 };
 
-const getAutoSuggestUsers = (userList, searchStr, limit) => {
+const getAutoSuggestUsers = (userList, searchStr, limitString) => {
+    let limit = Number(limitString);
+
+    if (limit < 1) {
+        limit = undefined;
+    }
+
     if (searchStr) {
         userList = userList.filter(user => user.login.includes(searchStr));
     }
