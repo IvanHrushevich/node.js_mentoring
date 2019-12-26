@@ -1,22 +1,30 @@
 {
-  "name": "nodejs-mentoring",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "task1": "nodemon --exec babel-node src/task1",
-    "task2": "nodemon --exec babel-node src/task2"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@babel/core": "^7.7.4",
-    "@babel/node": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
-    "nodemon": "^1.19.4"
-  },
-  "dependencies": {
-    "csvtojson": "^2.0.10"
-  }
+    "name": "nodejs-mentoring",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "task1": "nodemon --exec babel-node src/hw1/task1",
+        "task2": "nodemon --exec babel-node src/hw1/task2",
+        "task3": "nodemon --exec babel-node src/hw2/app",
+        "lint.task3": "eslint src/hw2/**"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/core": "^7.7.4",
+        "@babel/node": "^7.7.4",
+        "@babel/preset-env": "^7.7.4",
+        "babel-eslint": "^10.0.3",
+        "eslint": "^6.8.0",
+        "nodemon": "^1.19.4"
+    },
+    "dependencies": {
+        "@hapi/joi": "^16.1.8",
+        "csvtojson": "^2.0.10",
+        "express": "^4.17.1",
+        "prettier": "^1.19.1",
+        "uuid": "^3.3.3"
+    }
 }
