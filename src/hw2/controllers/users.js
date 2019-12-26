@@ -2,15 +2,7 @@ import uuid from 'uuid/v1';
 
 import { userSchema, errorResponse } from '../validation/index';
 
-const users = {
-    1: {
-        id: '1',
-        login: 'ivan_hrushevich',
-        password: 'asdasd1!',
-        age: 17,
-        isDeleted: false
-    }
-};
+const users = {};
 
 export const getById = (req, res) => {
     const id = req.params.id;
@@ -63,14 +55,14 @@ export const postUser = (req, res) => {
         user.isDeleted = false;
         users[user.id] = user;
 
-        res.sendStatus(200);
+        res.status(201).json(user);
     }
 };
 
 export const putUserById = (req, res) => {
-    const updatedUser = req.body;
+    const reqUser = req.body;
 
-    const { error } = userSchema.validate(updatedUser, {
+    const { error } = userSchema.validate(reqUser, {
         abortEarly: false,
         allowUnknown: false
     });
@@ -82,12 +74,13 @@ export const putUserById = (req, res) => {
         const user = users[id];
 
         if (user && user.isDeleted === false) {
-            users[id] = {
+            const updatedUser1 = {
                 ...user,
-                ...updatedUser
+                ...reqUser
             };
+            users[id] = updatedUser1;
 
-            res.sendStatus(200);
+            res.status(200).json(updatedUser1);
         } else {
             res.sendStatus(404);
         }
