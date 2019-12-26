@@ -12,11 +12,28 @@ const users = {
     }
 };
 
-export const getFilter = (req, res) => {
+export const getById = (req, res) => {
+    const id = req.params.id;
+    const user = users[id];
+
+    return user && user.isDeleted === false
+        ? res.json(user)
+        : res.sendStatus(404);
+};
+
+export const getUsers = (req, res) => {
     const searchStr = req.query.login;
     const limit = req.query.limit;
 
-    const filteredUserList = getAutoSuggestUsers(searchStr, limit);
+    const isRequestForAllUsers = searchStr === undefined && limit === undefined;
+
+    const activeUsers = Object.values(users).filter(
+        user => user.isDeleted === false
+    );
+
+    const filteredUserList = isRequestForAllUsers
+        ? activeUsers.sort(sortUsers)
+        : getAutoSuggestUsers(activeUsers, searchStr, limit);
 
     if (filteredUserList.length) {
         const filteredUsers = filteredUserList.reduce((acc, curr) => {
@@ -29,17 +46,6 @@ export const getFilter = (req, res) => {
         res.sendStatus(404);
     }
 };
-
-export const getById = (req, res) => {
-    const id = req.params.id;
-    const user = users[id];
-
-    return user && user.isDeleted === false
-        ? res.json(user)
-        : res.sendStatus(404);
-};
-
-export const getUsers = (req, res) => res.json(users);
 
 export const postUser = (req, res) => {
     const user = req.body;
@@ -101,12 +107,12 @@ export const deleteUserById = (req, res) => {
     }
 };
 
-const getAutoSuggestUsers = (searchStr, limit) => {
-    const userList = Object.values(users);
-    const filteredUserList = userList
-        .filter(user => user.login.includes(searchStr))
-        .sort((user1, user2) => user1.login > user2.login)
-        .slice(0, limit);
+const getAutoSuggestUsers = (userList, searchStr, limit) => {
+    if (searchStr) {
+        userList = userList.filter(user => user.login.includes(searchStr));
+    }
 
-    return filteredUserList;
+    return userList.sort(sortUsers).slice(0, limit);
 };
+
+const sortUsers = (user1, user2) => (user1.login > user2.login ? 1 : -1);

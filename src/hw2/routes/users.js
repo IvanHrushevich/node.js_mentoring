@@ -6,7 +6,6 @@ const usersRouter = express.Router();
 usersRouter.use(express.json());
 
 // request example: http://localhost:3000/users/filter?login=iv&limit=5
-usersRouter.get('/filter', usersControllers.getFilter);
 usersRouter.get('/:id', usersControllers.getById);
 usersRouter.get('/', usersControllers.getUsers);
 
