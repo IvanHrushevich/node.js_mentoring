@@ -1,10 +1,11 @@
+import express from 'express';
 import uuid from 'uuid/v1';
 
 import { userSchema, errorResponse } from '../validation/index';
 
 const users = {};
 
-export const getById = (req, res) => {
+const getById = (req, res) => {
     const id = req.params.id;
     const user = users[id];
 
@@ -13,7 +14,7 @@ export const getById = (req, res) => {
         : res.sendStatus(404);
 };
 
-export const getUsers = (req, res) => {
+const getUsers = (req, res) => {
     const searchStr = req.query.login;
     const limit = req.query.limit;
 
@@ -39,7 +40,7 @@ export const getUsers = (req, res) => {
     }
 };
 
-export const postUser = (req, res) => {
+const postUser = (req, res) => {
     const user = req.body;
 
     const { error } = userSchema.validate(user, {
@@ -59,7 +60,7 @@ export const postUser = (req, res) => {
     }
 };
 
-export const putUserById = (req, res) => {
+const putUserById = (req, res) => {
     const reqUser = req.body;
 
     const { error } = userSchema.validate(reqUser, {
@@ -87,7 +88,7 @@ export const putUserById = (req, res) => {
     }
 };
 
-export const deleteUserById = (req, res) => {
+const deleteUserById = (req, res) => {
     const id = req.params.id;
     const user = users[id];
 
@@ -115,3 +116,11 @@ const getAutoSuggestUsers = (userList, searchStr, limitString) => {
 };
 
 const sortUsers = (user1, user2) => (user1.login > user2.login ? 1 : -1);
+
+export const usersRouter = express.Router();
+
+usersRouter.get('/:id', getById);
+usersRouter.get('/', getUsers);
+usersRouter.post('/', postUser);
+usersRouter.put('/:id', putUserById);
+usersRouter.delete('/:id', deleteUserById);
