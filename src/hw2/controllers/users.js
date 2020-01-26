@@ -40,17 +40,10 @@ const putUserById = (req, res) => {
     const id = req.params.id;
     const reqUser = req.body;
 
-    const result = userManagementService.updateUser(id, reqUser);
-
-    if (result.error) {
-        if (result.error.validation) {
-            res.status(400).json(result.error.validation);
-        } else if (result.error.noUser) {
-            res.sendStatus(404);
-        }
-    } else {
-        res.status(200).json(result);
-    }
+    userManagementService
+        .updateUser(id, reqUser)
+        .then(user => res.status(200).json(user))
+        .catch(error => res.status(400).json(error));
 };
 
 const deleteUserById = (req, res) => {

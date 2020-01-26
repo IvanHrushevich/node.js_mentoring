@@ -64,34 +64,9 @@ class UserManagementService {
             allowUnknown: false
         });
 
-        let result;
-        if (error) {
-            result = {
-                error: {
-                    validation: errorResponse(error.details)
-                }
-            };
-        } else {
-            const user = this.users[id];
-
-            if (user && user.isDeleted === false) {
-                const updatedUser = {
-                    ...user,
-                    ...reqUser
-                };
-                this.users[id] = updatedUser;
-
-                result = updatedUser;
-            } else {
-                result = {
-                    error: {
-                        noUser: true
-                    }
-                };
-            }
-        }
-
-        return result;
+        return error
+            ? Promise.reject(errorResponse(error.details))
+            : this.userModel.updateUser(id, reqUser);
     }
 
     deleteUser(id) {

@@ -25,6 +25,19 @@ export class UserModel {
         });
     }
 
+    updateUser(id, reqUser) {
+        const updatedProps = Object.keys(reqUser);
+
+        const updatedUser = updatedProps.reduce((acc, prop) => {
+            acc[prop] = reqUser[prop];
+            return acc;
+        }, {});
+
+        return this.User.sync().then(() => {
+            return this.User.update(updatedUser, { where: { id } });
+        });
+    }
+
     deleteUser(id) {
         return this.User.sync().then(() => {
             return this.User.update({ isDeleted: true }, { where: { id } });
