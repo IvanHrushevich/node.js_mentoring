@@ -6,13 +6,20 @@ export class UserModel {
     constructor() {
         this._initConnection();
     }
+
     getAllUsers() {
         return this.User.sync().then(() => {
             return this.User.findAll();
         });
     }
 
-    createUser(user) {
+    getUserById(id) {
+        return this.User.sync().then(() => {
+            return this.User.findOne({ where: { id } });
+        });
+    }
+
+    saveUser(user) {
         return this.User.sync().then(() => {
             return this.User.create(user);
         });
@@ -20,9 +27,7 @@ export class UserModel {
 
     deleteUser(id) {
         return this.User.sync().then(() => {
-            return this.User.destroy({
-                where: { id }
-            });
+            return this.User.destroy({ where: { id } });
         });
     }
 
@@ -63,9 +68,9 @@ export class UserModel {
                 allowNull: false
             },
             id: {
-                type: Sequelize.STRING,
-                allowNull: false,
-                primaryKey: true
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
             },
             isDeleted: {
                 type: Sequelize.BOOLEAN,

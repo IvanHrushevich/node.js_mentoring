@@ -1,37 +1,43 @@
-import uuid from 'uuid/v1';
-
 import { userSchema, errorResponse } from '../validation/index';
+import { UserModel } from '../data-access/index';
 
-export class UserManagementService {
-    users = {};
+class UserManagementService {
+    constructor(userModel) {
+        this.userModel = userModel;
+    }
 
     getUserById(id) {
-        const user = this.users[id];
-        return user && user.isDeleted === false ? user : undefined;
+        return this.userModel
+            .getUserById(id)
+            .then(user =>
+                user && user.isDeleted === false ? user : undefined
+            );
     }
 
     getFilteredUsers(searchStr, limit) {
-        const isRequestForAllUsers =
-            searchStr === undefined && limit === undefined;
+        // const isRequestForAllUsers =
+        //     searchStr === undefined && limit === undefined;
 
-        const activeUsers = Object.values(this.users).filter(
-            user => user.isDeleted === false
-        );
+        // const activeUsers = Object.values(this.users).filter(
+        //     user => user.isDeleted === false
+        // );
 
-        const filteredUserList = isRequestForAllUsers
-            ? activeUsers.sort(this._sortUsers)
-            : this._getAutoSuggestUsers(activeUsers, searchStr, limit);
+        // const filteredUserList = isRequestForAllUsers
+        //     ? activeUsers.sort(this._sortUsers)
+        //     : this._getAutoSuggestUsers(activeUsers, searchStr, limit);
 
-        let filteredUsers;
+        // let filteredUsers;
 
-        if (filteredUserList.length) {
-            filteredUsers = filteredUserList.reduce((acc, curr) => {
-                acc[curr.id] = curr;
-                return acc;
-            }, {});
-        }
+        // if (filteredUserList.length) {
+        //     filteredUsers = filteredUserList.reduce((acc, curr) => {
+        //         acc[curr.id] = curr;
+        //         return acc;
+        //     }, {});
+        // }
 
-        return filteredUsers;
+        // return filteredUsers;
+
+        return this.userModel.getAllUsers();
     }
 
     saveUser(user) {
@@ -43,14 +49,10 @@ export class UserManagementService {
         let result;
 
         if (error) {
-            result = { error: errorResponse(error.details) };
+            result = Promise.reject(errorResponse(error.details));
         } else {
-            const id = uuid();
-            user.id = id;
             user.isDeleted = false;
-            this.users[user.id] = user;
-
-            result = user;
+            result = this.userModel.saveUser(user);
         }
 
         return result;
@@ -93,17 +95,7 @@ export class UserManagementService {
     }
 
     deleteUser(id) {
-        const user = this.users[id];
-
-        let result;
-
-        if (user && user.isDeleted === false) {
-            user.isDeleted = true;
-
-            result = user;
-        }
-
-        return result;
+        return this.userModel.deleteUser(id);
     }
 
     _getAutoSuggestUsers(userList, searchStr, limitString) {
@@ -124,3 +116,5 @@ export class UserManagementService {
         return user1.login > user2.login ? 1 : -1;
     }
 }
+
+export const userManagementService = new UserManagementService(new UserModel());
