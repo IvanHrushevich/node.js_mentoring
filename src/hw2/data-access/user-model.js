@@ -27,7 +27,7 @@ export class UserModel {
 
     deleteUser(id) {
         return this.User.sync().then(() => {
-            return this.User.destroy({ where: { id } });
+            return this.User.update({ isDeleted: true }, { where: { id } });
         });
     }
 

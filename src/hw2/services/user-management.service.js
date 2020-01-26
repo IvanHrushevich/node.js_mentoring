@@ -15,29 +15,29 @@ class UserManagementService {
     }
 
     getFilteredUsers(searchStr, limit) {
-        // const isRequestForAllUsers =
-        //     searchStr === undefined && limit === undefined;
+        const isRequestForAllUsers =
+            searchStr === undefined && limit === undefined;
 
-        // const activeUsers = Object.values(this.users).filter(
-        //     user => user.isDeleted === false
-        // );
+        return this.userModel.getAllUsers().then(users => {
+            const activeUsers = Object.values(users).filter(
+                user => user.isDeleted === false
+            );
 
-        // const filteredUserList = isRequestForAllUsers
-        //     ? activeUsers.sort(this._sortUsers)
-        //     : this._getAutoSuggestUsers(activeUsers, searchStr, limit);
+            const filteredUserList = isRequestForAllUsers
+                ? activeUsers.sort(this._sortUsers)
+                : this._getAutoSuggestUsers(activeUsers, searchStr, limit);
 
-        // let filteredUsers;
+            let filteredUsers;
 
-        // if (filteredUserList.length) {
-        //     filteredUsers = filteredUserList.reduce((acc, curr) => {
-        //         acc[curr.id] = curr;
-        //         return acc;
-        //     }, {});
-        // }
+            if (filteredUserList.length) {
+                filteredUsers = filteredUserList.reduce((acc, curr) => {
+                    acc[curr.id] = curr;
+                    return acc;
+                }, {});
+            }
 
-        // return filteredUsers;
-
-        return this.userModel.getAllUsers();
+            return filteredUsers;
+        });
     }
 
     saveUser(user) {
@@ -109,7 +109,9 @@ class UserManagementService {
             userList = userList.filter(user => user.login.includes(searchStr));
         }
 
-        return userList.sort(this._sortUsers).slice(0, limit);
+        return limit
+            ? userList.sort(this._sortUsers).slice(0, limit)
+            : userList.sort(this._sortUsers);
     }
 
     _sortUsers(user1, user2) {
