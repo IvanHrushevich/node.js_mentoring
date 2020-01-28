@@ -1,5 +1,7 @@
 import { Sequelize } from 'sequelize';
 
+const Op = Sequelize.Op;
+
 export class UserModel {
     User;
 
@@ -10,6 +12,17 @@ export class UserModel {
     getAllUsers() {
         return this.User.sync().then(() => {
             return this.User.findAll();
+        });
+    }
+
+    getFilteredUsers(searchStr, limit) {
+        return this.User.sync().then(() => {
+            return this.User.findAll({
+                where: {
+                    login: { [Op.substring]: searchStr }
+                },
+                limit
+            });
         });
     }
 

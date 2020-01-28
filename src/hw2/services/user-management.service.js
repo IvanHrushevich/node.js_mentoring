@@ -18,26 +18,11 @@ class UserManagementService {
         const isRequestForAllUsers =
             searchStr === undefined && limit === undefined;
 
-        return this.userModel.getAllUsers().then(users => {
-            const activeUsers = Object.values(users).filter(
-                user => user.isDeleted === false
-            );
-
-            const filteredUserList = isRequestForAllUsers
-                ? activeUsers.sort(this._sortUsers)
-                : this._getAutoSuggestUsers(activeUsers, searchStr, limit);
-
-            let filteredUsers;
-
-            if (filteredUserList.length) {
-                filteredUsers = filteredUserList.reduce((acc, curr) => {
-                    acc[curr.id] = curr;
-                    return acc;
-                }, {});
-            }
-
-            return filteredUsers;
-        });
+        if (isRequestForAllUsers) {
+            return this.userModel.getAllUsers();
+        } else {
+            return this.userModel.getFilteredUsers(searchStr, limit);
+        }
     }
 
     saveUser(user) {
