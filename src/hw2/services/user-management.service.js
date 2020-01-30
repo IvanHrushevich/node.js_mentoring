@@ -1,13 +1,14 @@
 import { userSchema, errorResponse } from '../validation/index';
-import { UserModel } from '../data-access/index';
+import { UserDAO } from '../data-access/index';
+import { UserModel } from '../models/index';
 
 class UserManagementService {
-    constructor(userModel) {
-        this.userModel = userModel;
+    constructor(userDAO) {
+        this._userDAO = userDAO;
     }
 
     getUserById(id) {
-        return this.userModel
+        return this._userDAO
             .getUserById(id)
             .then(user =>
                 user && user.isDeleted === false ? user : undefined
@@ -19,9 +20,9 @@ class UserManagementService {
             searchStr === undefined && limit === undefined;
 
         if (isRequestForAllUsers) {
-            return this.userModel.getAllUsers();
+            return this._userDAO.getAllUsers();
         } else {
-            return this.userModel.getFilteredUsers(searchStr, limit);
+            return this._userDAO.getFilteredUsers(searchStr, limit);
         }
     }
 
@@ -37,7 +38,7 @@ class UserManagementService {
             result = Promise.reject(errorResponse(error.details));
         } else {
             user.isDeleted = false;
-            result = this.userModel.saveUser(user);
+            result = this._userDAO.saveUser(user);
         }
 
         return result;
@@ -51,11 +52,11 @@ class UserManagementService {
 
         return error
             ? Promise.reject(errorResponse(error.details))
-            : this.userModel.updateUser(id, reqUser);
+            : this._userDAO.updateUser(id, reqUser);
     }
 
     deleteUser(id) {
-        return this.userModel.deleteUser(id);
+        return this._userDAO.deleteUser(id);
     }
 
     _getAutoSuggestUsers(userList, searchStr, limitString) {
@@ -79,4 +80,6 @@ class UserManagementService {
     }
 }
 
-export const userManagementService = new UserManagementService(new UserModel());
+export const userManagementService = new UserManagementService(
+    new UserDAO(new UserModel())
+);
