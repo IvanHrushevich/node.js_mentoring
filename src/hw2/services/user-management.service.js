@@ -1,8 +1,6 @@
 import { userSchema, errorResponse } from '../validation/index';
-import { UserDAO } from '../data-access/index';
-import { UserModel } from '../models/index';
 
-class UserManagementService {
+export class UserManagementService {
     constructor(userDAO) {
         this._userDAO = userDAO;
     }
@@ -79,7 +77,3 @@ class UserManagementService {
         return user1.login > user2.login ? 1 : -1;
     }
 }
-
-export const userManagementService = new UserManagementService(
-    new UserDAO(new UserModel())
-);

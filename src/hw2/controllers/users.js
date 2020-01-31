@@ -1,10 +1,15 @@
 import express from 'express';
 
-import { userManagementService } from '../services/index';
+import { UserManagementService } from '../services/index';
+import { UserDAO } from '../data-access/index';
+import { userModel } from '../models/index';
+
+const userDAO = new UserDAO(userModel);
+const usersService = new UserManagementService(userDAO);
 
 const getById = (req, res) => {
     const id = req.params.id;
-    userManagementService.getUserById(id).then(user => {
+    usersService.getUserById(id).then(user => {
         if (user) {
             res.json(user);
         } else {
@@ -17,20 +22,18 @@ const getUsers = (req, res) => {
     const searchStr = req.query.login;
     const limit = req.query.limit;
 
-    userManagementService
-        .getFilteredUsers(searchStr, limit)
-        .then(filteredUsers => {
-            if (filteredUsers) {
-                res.json(filteredUsers);
-            } else {
-                res.sendStatus(404);
-            }
-        });
+    usersService.getFilteredUsers(searchStr, limit).then(filteredUsers => {
+        if (filteredUsers) {
+            res.json(filteredUsers);
+        } else {
+            res.sendStatus(404);
+        }
+    });
 };
 
 const postUser = (req, res) => {
     const user = req.body;
-    userManagementService
+    usersService
         .saveUser(user)
         .then(savedUser => res.status(201).json(savedUser))
         .catch(error => res.status(400).json(error));
@@ -40,7 +43,7 @@ const putUserById = (req, res) => {
     const id = req.params.id;
     const reqUser = req.body;
 
-    userManagementService
+    usersService
         .updateUser(id, reqUser)
         .then(user => res.status(200).json(user))
         .catch(error => res.status(400).json(error));
@@ -48,7 +51,7 @@ const putUserById = (req, res) => {
 
 const deleteUserById = (req, res) => {
     const id = req.params.id;
-    userManagementService.deleteUser(id).then(user => {
+    usersService.deleteUser(id).then(user => {
         if (user) {
             res.status(200).json(user);
         } else {
