@@ -4,16 +4,13 @@ const Op = Sequelize.Op;
 
 export class UserDAO {
     _userModel;
-    _synced = false;
 
     constructor(userModel) {
         this._userModel = userModel;
     }
 
     getAllUsers() {
-        return this._userModel.sync().then(() => {
-            return this._userModel.findAll();
-        });
+        return this._userModel.findAll();
     }
 
     getFilteredUsers(searchStr, limit) {

@@ -7,57 +7,62 @@ import { userModel } from '../models/index';
 const userDAO = new UserDAO(userModel);
 const usersService = new UserManagementService(userDAO);
 
-const getById = (req, res) => {
+const getById = async (req, res) => {
     const id = req.params.id;
-    usersService.getUserById(id).then(user => {
-        if (user) {
-            res.json(user);
-        } else {
-            res.sendStatus(404);
-        }
-    });
+    const user = await usersService.getUserById(id);
+
+    if (user) {
+        res.json(user);
+    } else {
+        res.sendStatus(404);
+    }
 };
 
-const getUsers = (req, res) => {
+const getUsers = async (req, res) => {
     const searchStr = req.query.login;
     const limit = req.query.limit;
 
-    usersService.getFilteredUsers(searchStr, limit).then(filteredUsers => {
-        if (filteredUsers) {
-            res.json(filteredUsers);
-        } else {
-            res.sendStatus(404);
-        }
-    });
+    const filteredUsers = await usersService.getFilteredUsers(searchStr, limit);
+
+    if (filteredUsers) {
+        res.json(filteredUsers);
+    } else {
+        res.sendStatus(404);
+    }
 };
 
-const postUser = (req, res) => {
+const postUser = async (req, res) => {
     const user = req.body;
-    usersService
-        .saveUser(user)
-        .then(savedUser => res.status(201).json(savedUser))
-        .catch(error => res.status(400).json(error));
+
+    try {
+        const savedUser = await usersService.saveUser(user);
+        res.status(201).json(savedUser);
+    } catch (error) {
+        res.status(400).json(error);
+    }
 };
 
-const putUserById = (req, res) => {
+const putUserById = async (req, res) => {
     const id = req.params.id;
     const reqUser = req.body;
 
-    usersService
-        .updateUser(id, reqUser)
-        .then(user => res.status(200).json(user))
-        .catch(error => res.status(400).json(error));
+    try {
+        const result = await usersService.updateUser(id, reqUser);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).json(error);
+    }
 };
 
-const deleteUserById = (req, res) => {
+const deleteUserById = async (req, res) => {
     const id = req.params.id;
-    usersService.deleteUser(id).then(user => {
-        if (user) {
-            res.status(200).json(user);
-        } else {
-            res.sendStatus(404);
-        }
-    });
+
+    try {
+        const result = await usersService.deleteUser(id);
+        res.status(200).json(result);
+    } catch (error) {
+        res.sendStatus(404);
+    }
 };
 
 export const usersRouter = express.Router();

@@ -5,23 +5,19 @@ export class UserManagementService {
         this._userDAO = userDAO;
     }
 
-    getUserById(id) {
-        return this._userDAO
-            .getUserById(id)
-            .then(user =>
-                user && user.isDeleted === false ? user : undefined
-            );
+    async getUserById(id) {
+        const user = await this._userDAO.getUserById(id);
+
+        return user && user.isDeleted === false ? user : undefined;
     }
 
     getFilteredUsers(searchStr, limit) {
         const isRequestForAllUsers =
             searchStr === undefined && limit === undefined;
 
-        if (isRequestForAllUsers) {
-            return this._userDAO.getAllUsers();
-        } else {
-            return this._userDAO.getFilteredUsers(searchStr, limit);
-        }
+        return isRequestForAllUsers
+            ? this._userDAO.getAllUsers()
+            : this._userDAO.getFilteredUsers(searchStr, limit);
     }
 
     saveUser(user) {
