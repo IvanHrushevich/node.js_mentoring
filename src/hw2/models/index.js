@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize';
 import { UserModel } from './user.model';
 
 const connectionURI =
-    'postgres://bbyhlqwvihzmju:1cfe04e8c8c489e71fbb9d63b44a8039af06add5289106f0d1518e4efa27b978@ec2-54-228-237-40.eu-west-1.compute.amazonaws.com:5432/dd9jsqdcncjd1t';
+    'postgres://agzctnieexodcz:bda6e1e7a30c12426c357809944e754486e23d4ed40c473146051e078c875e15@ec2-54-195-252-243.eu-west-1.compute.amazonaws.com:5432/dfpm81bm9safgr';
 
 const db = new Sequelize(connectionURI, {
     dialect: 'postgres',
