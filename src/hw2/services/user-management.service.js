@@ -5,10 +5,8 @@ export class UserManagementService {
         this._userDAO = userDAO;
     }
 
-    async getUserById(id) {
-        const user = await this._userDAO.getUserById(id);
-
-        return user && user.isDeleted === false ? user : undefined;
+    getUserById(id) {
+        return this._userDAO.getUserById(id);
     }
 
     getFilteredUsers(searchStr, limit) {
@@ -31,7 +29,6 @@ export class UserManagementService {
         if (error) {
             result = Promise.reject(errorResponse(error.details));
         } else {
-            user.isDeleted = false;
             result = this._userDAO.saveUser(user);
         }
 

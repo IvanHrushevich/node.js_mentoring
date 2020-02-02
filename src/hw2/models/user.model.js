@@ -19,10 +19,6 @@ export class UserModel {
                 type: DataTypes.UUID,
                 primaryKey: true,
                 defaultValue: Sequelize.UUIDV4
-            },
-            isDeleted: {
-                type: Sequelize.BOOLEAN,
-                allowNull: false
             }
         });
     }

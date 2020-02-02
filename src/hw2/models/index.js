@@ -11,8 +11,10 @@ const db = new Sequelize(connectionURI, {
         ssl: true
     },
     define: {
-        timestamps: false
-    }
+        timestamps: true,
+        paranoid: true
+    },
+    sync: { force: true }
 });
 
 export const userModel = new UserModel(db);

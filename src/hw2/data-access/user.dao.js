@@ -10,7 +10,9 @@ export class UserDAO {
     }
 
     getAllUsers() {
-        return this._userModel.findAll();
+        return this._userModel.sync().then(() => {
+            return this._userModel.findAll();
+        });
     }
 
     getFilteredUsers(searchStr, limit) {
@@ -42,6 +44,6 @@ export class UserDAO {
     }
 
     deleteUser(id) {
-        return this._userModel.update({ isDeleted: true }, { where: { id } });
+        return this._userModel.destroy({ where: { id } });
     }
 }
