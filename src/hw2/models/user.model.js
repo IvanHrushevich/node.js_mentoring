@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 
 export class UserModel {
     constructor(db) {
@@ -16,9 +16,9 @@ export class UserModel {
                 allowNull: false
             },
             id: {
-                type: Sequelize.INTEGER,
+                type: DataTypes.UUID,
                 primaryKey: true,
-                autoIncrement: true
+                defaultValue: Sequelize.UUIDV4
             },
             isDeleted: {
                 type: Sequelize.BOOLEAN,
