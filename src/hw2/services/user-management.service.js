@@ -52,24 +52,4 @@ export class UserManagementService {
     deleteUser(id) {
         return this._userDAO.deleteUser(id);
     }
-
-    _getAutoSuggestUsers(userList, searchStr, limitString) {
-        let limit = Number(limitString);
-
-        if (limit < 1) {
-            limit = undefined;
-        }
-
-        if (searchStr) {
-            userList = userList.filter(user => user.login.includes(searchStr));
-        }
-
-        return limit
-            ? userList.sort(this._sortUsers).slice(0, limit)
-            : userList.sort(this._sortUsers);
-    }
-
-    _sortUsers(user1, user2) {
-        return user1.login > user2.login ? 1 : -1;
-    }
 }
