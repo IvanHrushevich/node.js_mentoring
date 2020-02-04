@@ -1,15 +1,19 @@
 import { userSchema, errorResponse } from '../validation/index';
+import { UserDAO } from '../data-access/index';
+import { User } from '../interfaces/index';
 
 export class UserManagementService {
-    constructor(userDAO) {
+    _userDAO: UserDAO;
+
+    constructor(userDAO: UserDAO) {
         this._userDAO = userDAO;
     }
 
-    getUserById(id) {
+    getUserById(id: string) {
         return this._userDAO.getUserById(id);
     }
 
-    getFilteredUsers(searchStr, limit) {
+    getFilteredUsers(searchStr: string, limit: number) {
         const isRequestForAllUsers =
             searchStr === undefined && limit === undefined;
 
@@ -18,7 +22,7 @@ export class UserManagementService {
             : this._userDAO.getFilteredUsers(searchStr, limit);
     }
 
-    saveUser(user) {
+    saveUser(user: User) {
         const { error } = userSchema.validate(user, {
             abortEarly: false,
             allowUnknown: false
@@ -35,7 +39,7 @@ export class UserManagementService {
         return result;
     }
 
-    updateUser(id, reqUser) {
+    updateUser(id: string, reqUser: User) {
         const { error } = userSchema.validate(reqUser, {
             abortEarly: false,
             allowUnknown: false
@@ -46,7 +50,7 @@ export class UserManagementService {
             : this._userDAO.updateUser(id, reqUser);
     }
 
-    deleteUser(id) {
+    deleteUser(id: string) {
         return this._userDAO.deleteUser(id);
     }
 }

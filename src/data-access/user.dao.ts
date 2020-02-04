@@ -1,6 +1,6 @@
-import { Sequelize } from 'sequelize';
+import { Op } from 'sequelize';
 
-const Op = Sequelize.Op;
+import { User } from '../interfaces/index';
 
 export class UserDAO {
     _userModel;
@@ -13,7 +13,7 @@ export class UserDAO {
         return this._userModel.findAll();
     }
 
-    getFilteredUsers(searchStr, limit) {
+    getFilteredUsers(searchStr: string, limit: number) {
         return this._userModel.findAll({
             where: {
                 login: { [Op.substring]: searchStr }
@@ -22,18 +22,18 @@ export class UserDAO {
         });
     }
 
-    getUserById(id) {
+    getUserById(id: string) {
         return this._userModel.findOne({ where: { id } });
     }
 
-    saveUser(user) {
+    saveUser(user: User) {
         return this._userModel.create(user);
     }
 
-    updateUser(id, reqUser) {
-        const updatedProps = Object.keys(reqUser);
+    updateUser(id: string, reqUser: User) {
+        const updatedProps: Array<string> = Object.keys(reqUser);
 
-        const updatedUser = updatedProps.reduce((acc, prop) => {
+        const updatedUser = updatedProps.reduce((acc: any, prop: string) => {
             acc[prop] = reqUser[prop];
             return acc;
         }, {});
@@ -41,7 +41,7 @@ export class UserDAO {
         return this._userModel.update(updatedUser, { where: { id } });
     }
 
-    deleteUser(id) {
+    deleteUser(id: string) {
         return this._userModel.destroy({ where: { id } });
     }
 }

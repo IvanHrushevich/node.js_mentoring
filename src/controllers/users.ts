@@ -3,13 +3,17 @@ import express from 'express';
 import { UserManagementService } from '../services/index';
 import { UserDAO } from '../data-access/index';
 import { userModel } from '../models/index';
+import { User } from '../interfaces/index';
 
-const userDAO = new UserDAO(userModel);
+const userDAO: UserDAO = new UserDAO(userModel);
 const usersService = new UserManagementService(userDAO);
 
-const getById = async (req, res) => {
-    const id = req.params.id;
-    const user = await usersService.getUserById(id);
+const getById: (
+    req: express.Request,
+    res: express.Response
+) => Promise<void> = async (req, res) => {
+    const id: string = req.params.id;
+    const user: User = await usersService.getUserById(id);
 
     if (user) {
         res.json(user);
@@ -18,11 +22,17 @@ const getById = async (req, res) => {
     }
 };
 
-const getUsers = async (req, res) => {
-    const searchStr = req.query.login;
-    const limit = req.query.limit;
+const getUsers: (
+    req: express.Request,
+    res: express.Response
+) => Promise<void> = async (req, res) => {
+    const searchStr: string = req.query.login;
+    const limit: number = Number(req.query.limit);
 
-    const filteredUsers = await usersService.getFilteredUsers(searchStr, limit);
+    const filteredUsers: Array<User> = await usersService.getFilteredUsers(
+        searchStr,
+        limit
+    );
 
     if (filteredUsers) {
         res.json(filteredUsers);
@@ -31,41 +41,50 @@ const getUsers = async (req, res) => {
     }
 };
 
-const postUser = async (req, res) => {
+const postUser: (
+    req: express.Request,
+    res: express.Response
+) => Promise<void> = async (req, res) => {
     const user = req.body;
 
     try {
-        const savedUser = await usersService.saveUser(user);
+        const savedUser: User = await usersService.saveUser(user);
         res.status(201).json(savedUser);
     } catch (error) {
         res.status(400).json(error);
     }
 };
 
-const putUserById = async (req, res) => {
-    const id = req.params.id;
-    const reqUser = req.body;
+const putUserById: (
+    req: express.Request,
+    res: express.Response
+) => Promise<void> = async (req, res) => {
+    const id: string = req.params.id;
+    const reqUser: User = req.body;
 
     try {
-        const result = await usersService.updateUser(id, reqUser);
+        const result: string = await usersService.updateUser(id, reqUser);
         res.status(200).json(result);
     } catch (error) {
         res.status(400).json(error);
     }
 };
 
-const deleteUserById = async (req, res) => {
-    const id = req.params.id;
+const deleteUserById: (
+    req: express.Request,
+    res: express.Response
+) => Promise<void> = async (req, res) => {
+    const id: string = req.params.id;
 
     try {
-        const result = await usersService.deleteUser(id);
+        const result: string = await usersService.deleteUser(id);
         res.status(200).json(result);
     } catch (error) {
         res.sendStatus(404);
     }
 };
 
-export const usersRouter = express.Router();
+export const usersRouter: express.Router = express.Router();
 
 usersRouter.get('/:id', getById);
 usersRouter.get('/', getUsers);

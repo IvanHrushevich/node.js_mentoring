@@ -1,24 +1,24 @@
 import { DataTypes, Sequelize } from 'sequelize';
 
 export class UserModel {
-    constructor(db) {
+    constructor(db: Sequelize) {
         return db.define('user', {
             login: {
-                type: Sequelize.STRING,
+                type: DataTypes.STRING,
                 allowNull: false
             },
             password: {
-                type: Sequelize.STRING,
+                type: DataTypes.STRING,
                 allowNull: false
             },
             age: {
-                type: Sequelize.INTEGER,
+                type: DataTypes.INTEGER,
                 allowNull: false
             },
             id: {
                 type: DataTypes.UUID,
                 primaryKey: true,
-                defaultValue: Sequelize.UUIDV4
+                defaultValue: DataTypes.UUIDV4
             }
         });
     }
