@@ -1,3 +1,5 @@
+import { ValidationResult } from '@hapi/joi';
+
 import { userSchema, errorResponse } from '../validation/index';
 import { UserDAO } from '../data-access/index';
 import { User, UpdateUserResponse } from '../interfaces/index';
@@ -26,10 +28,11 @@ export class UserService {
     }
 
     saveUser(user: User): Promise<User> {
-        const { error } = userSchema.validate(user, {
+        const validationResult: ValidationResult = userSchema.validate(user, {
             abortEarly: false,
             allowUnknown: false
         });
+        const error = validationResult.error;
 
         let result;
 
