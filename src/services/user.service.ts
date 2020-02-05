@@ -2,7 +2,7 @@ import { userSchema, errorResponse } from '../validation/index';
 import { UserDAO } from '../data-access/index';
 import { User, UpdateUserResponse } from '../interfaces/index';
 
-export class UserManagementService {
+export class UserService {
     _userDAO: UserDAO;
 
     constructor(userDAO: UserDAO) {

@@ -1,12 +1,12 @@
 import express from 'express';
 
-import { UserManagementService } from '../services/index';
+import { UserService } from '../services/index';
 import { UserDAO } from '../data-access/index';
 import { userModel } from '../models/index';
 import { User, UpdateUserResponse } from '../interfaces/index';
 
 const userDAO: UserDAO = new UserDAO(userModel);
-const usersService = new UserManagementService(userDAO);
+const usersService = new UserService(userDAO);
 
 const getById: (
     req: express.Request,
