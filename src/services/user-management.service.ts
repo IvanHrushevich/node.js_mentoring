@@ -1,6 +1,6 @@
 import { userSchema, errorResponse } from '../validation/index';
 import { UserDAO } from '../data-access/index';
-import { User } from '../interfaces/index';
+import { User, UpdateUserResponse } from '../interfaces/index';
 
 export class UserManagementService {
     _userDAO: UserDAO;
@@ -9,11 +9,14 @@ export class UserManagementService {
         this._userDAO = userDAO;
     }
 
-    getUserById(id: string) {
+    getUserById(id: string): Promise<User | null> {
         return this._userDAO.getUserById(id);
     }
 
-    getFilteredUsers(searchStr: string, limit: number) {
+    getFilteredUsers(
+        searchStr: string,
+        limit: number | undefined
+    ): Promise<User[]> {
         const isRequestForAllUsers =
             searchStr === undefined && limit === undefined;
 
@@ -22,7 +25,7 @@ export class UserManagementService {
             : this._userDAO.getFilteredUsers(searchStr, limit);
     }
 
-    saveUser(user: User) {
+    saveUser(user: User): Promise<User> {
         const { error } = userSchema.validate(user, {
             abortEarly: false,
             allowUnknown: false
@@ -39,18 +42,11 @@ export class UserManagementService {
         return result;
     }
 
-    updateUser(id: string, reqUser: User) {
-        const { error } = userSchema.validate(reqUser, {
-            abortEarly: false,
-            allowUnknown: false
-        });
-
-        return error
-            ? Promise.reject(errorResponse(error.details))
-            : this._userDAO.updateUser(id, reqUser);
+    updateUser(id: string, reqUser: User): Promise<UpdateUserResponse> {
+        return this._userDAO.updateUser(id, reqUser);
     }
 
-    deleteUser(id: string) {
+    deleteUser(id: string): Promise<number> {
         return this._userDAO.deleteUser(id);
     }
 }

@@ -3,7 +3,7 @@ import express from 'express';
 import { UserManagementService } from '../services/index';
 import { UserDAO } from '../data-access/index';
 import { userModel } from '../models/index';
-import { User } from '../interfaces/index';
+import { User, UpdateUserResponse } from '../interfaces/index';
 
 const userDAO: UserDAO = new UserDAO(userModel);
 const usersService = new UserManagementService(userDAO);
@@ -13,7 +13,7 @@ const getById: (
     res: express.Response
 ) => Promise<void> = async (req, res) => {
     const id: string = req.params.id;
-    const user: User = await usersService.getUserById(id);
+    const user: User | null = await usersService.getUserById(id);
 
     if (user) {
         res.json(user);
@@ -27,9 +27,9 @@ const getUsers: (
     res: express.Response
 ) => Promise<void> = async (req, res) => {
     const searchStr: string = req.query.login;
-    const limit: number = Number(req.query.limit);
+    const limit: number | undefined = Number(req.query.limit) || undefined;
 
-    const filteredUsers: Array<User> = await usersService.getFilteredUsers(
+    const filteredUsers: User[] = await usersService.getFilteredUsers(
         searchStr,
         limit
     );
@@ -63,7 +63,10 @@ const putUserById: (
     const reqUser: User = req.body;
 
     try {
-        const result: string = await usersService.updateUser(id, reqUser);
+        const result: UpdateUserResponse = await usersService.updateUser(
+            id,
+            reqUser
+        );
         res.status(200).json(result);
     } catch (error) {
         res.status(400).json(error);
@@ -77,7 +80,7 @@ const deleteUserById: (
     const id: string = req.params.id;
 
     try {
-        const result: string = await usersService.deleteUser(id);
+        const result: number = await usersService.deleteUser(id);
         res.status(200).json(result);
     } catch (error) {
         res.sendStatus(404);

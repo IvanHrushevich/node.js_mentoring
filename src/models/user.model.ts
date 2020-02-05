@@ -1,4 +1,15 @@
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes, Sequelize, Model, BuildOptions } from 'sequelize';
+
+interface UserModelSeq extends Model {
+    readonly id: string;
+    readonly login: string;
+    readonly password: string;
+    readonly age: number;
+}
+
+export type UserModelStatic = typeof Model & {
+    new (values?: object, options?: BuildOptions): UserModelSeq;
+};
 
 export class UserModel {
     constructor(db: Sequelize) {

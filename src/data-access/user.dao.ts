@@ -1,19 +1,23 @@
 import { Op } from 'sequelize';
 
-import { User } from '../interfaces/index';
+import { User, UpdateUserResponse } from '../interfaces/index';
+import { UserModelStatic } from '../models/index';
 
 export class UserDAO {
-    _userModel;
+    _userModel: UserModelStatic;
 
-    constructor(userModel) {
+    constructor(userModel: UserModelStatic) {
         this._userModel = userModel;
     }
 
-    getAllUsers() {
+    getAllUsers(): Promise<User[]> {
         return this._userModel.findAll();
     }
 
-    getFilteredUsers(searchStr: string, limit: number) {
+    getFilteredUsers(
+        searchStr: string,
+        limit: number | undefined
+    ): Promise<User[]> {
         return this._userModel.findAll({
             where: {
                 login: { [Op.substring]: searchStr }
@@ -22,26 +26,19 @@ export class UserDAO {
         });
     }
 
-    getUserById(id: string) {
+    getUserById(id: string): Promise<User | null> {
         return this._userModel.findOne({ where: { id } });
     }
 
-    saveUser(user: User) {
+    saveUser(user: User): Promise<User> {
         return this._userModel.create(user);
     }
 
-    updateUser(id: string, reqUser: User) {
-        const updatedProps: Array<string> = Object.keys(reqUser);
-
-        const updatedUser = updatedProps.reduce((acc: any, prop: string) => {
-            acc[prop] = reqUser[prop];
-            return acc;
-        }, {});
-
-        return this._userModel.update(updatedUser, { where: { id } });
+    updateUser(id: string, reqUser: User): Promise<UpdateUserResponse> {
+        return this._userModel.update(reqUser, { where: { id } });
     }
 
-    deleteUser(id: string) {
+    deleteUser(id: string): Promise<number> {
         return this._userModel.destroy({ where: { id } });
     }
 }
