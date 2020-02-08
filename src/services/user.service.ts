@@ -1,15 +1,24 @@
-import { userSchema, errorResponse } from '../validation/index';
+import { ValidationResult } from '@hapi/joi';
 
-export class UserManagementService {
-    constructor(userDAO) {
+import { userSchema, errorResponse } from '../validation/index';
+import { UserDAO } from '../data-access/index';
+import { User, UpdateUserResponse } from '../interfaces/index';
+
+export class UserService {
+    _userDAO: UserDAO;
+
+    constructor(userDAO: UserDAO) {
         this._userDAO = userDAO;
     }
 
-    getUserById(id) {
+    getUserById(id: string): Promise<User | null> {
         return this._userDAO.getUserById(id);
     }
 
-    getFilteredUsers(searchStr, limit) {
+    getFilteredUsers(
+        searchStr: string,
+        limit: number | undefined
+    ): Promise<User[]> {
         const isRequestForAllUsers =
             searchStr === undefined && limit === undefined;
 
@@ -18,11 +27,12 @@ export class UserManagementService {
             : this._userDAO.getFilteredUsers(searchStr, limit);
     }
 
-    saveUser(user) {
-        const { error } = userSchema.validate(user, {
+    saveUser(user: User): Promise<User> {
+        const validationResult: ValidationResult = userSchema.validate(user, {
             abortEarly: false,
             allowUnknown: false
         });
+        const error = validationResult.error;
 
         let result;
 
@@ -35,18 +45,11 @@ export class UserManagementService {
         return result;
     }
 
-    updateUser(id, reqUser) {
-        const { error } = userSchema.validate(reqUser, {
-            abortEarly: false,
-            allowUnknown: false
-        });
-
-        return error
-            ? Promise.reject(errorResponse(error.details))
-            : this._userDAO.updateUser(id, reqUser);
+    updateUser(id: string, reqUser: User): Promise<UpdateUserResponse> {
+        return this._userDAO.updateUser(id, reqUser);
     }
 
-    deleteUser(id) {
+    deleteUser(id: string): Promise<number> {
         return this._userDAO.deleteUser(id);
     }
 }
