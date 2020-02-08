@@ -27,12 +27,7 @@ const getAllGroups: (
     res: express.Response
 ) => Promise<void> = async (req, res) => {
     const groups: Group[] = await groupService.getAllGroups();
-
-    if (groups) {
-        res.json(groups);
-    } else {
-        res.sendStatus(404);
-    }
+    res.json(groups);
 };
 
 const postGroup: (
