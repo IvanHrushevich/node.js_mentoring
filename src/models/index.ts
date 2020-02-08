@@ -12,8 +12,7 @@ const db: Sequelize = new Sequelize(connectionURI, {
         ssl: true
     },
     define: {
-        timestamps: true,
-        paranoid: true
+        timestamps: false
     },
     sync: { force: true }
 });
