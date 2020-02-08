@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 
-import { User, UpdateUserResponse } from '../interfaces/index';
+import { User, SeqUpdateResponse } from '../interfaces/index';
 import { UserModelStatic } from '../models/index';
 
 export class UserDAO {
@@ -34,7 +34,7 @@ export class UserDAO {
         return this._userModel.create(user);
     }
 
-    updateUser(id: string, reqUser: User): Promise<UpdateUserResponse> {
+    updateUser(id: string, reqUser: User): Promise<SeqUpdateResponse<User>> {
         return this._userModel.update(reqUser, { where: { id } });
     }
 

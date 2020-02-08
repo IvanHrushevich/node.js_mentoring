@@ -2,7 +2,7 @@ import { ValidationResult } from '@hapi/joi';
 
 import { userSchema, errorResponse } from '../validation/index';
 import { UserDAO } from '../data-access/index';
-import { User, UpdateUserResponse } from '../interfaces/index';
+import { User, SeqUpdateResponse } from '../interfaces/index';
 
 export class UserService {
     _userDAO: UserDAO;
@@ -45,7 +45,7 @@ export class UserService {
         return result;
     }
 
-    updateUser(id: string, reqUser: User): Promise<UpdateUserResponse> {
+    updateUser(id: string, reqUser: User): Promise<SeqUpdateResponse<User>> {
         return this._userDAO.updateUser(id, reqUser);
     }
 

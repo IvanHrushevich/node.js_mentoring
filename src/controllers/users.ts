@@ -3,7 +3,7 @@ import express from 'express';
 import { UserService } from '../services/index';
 import { UserDAO } from '../data-access/index';
 import { userModel } from '../models/index';
-import { User, UpdateUserResponse } from '../interfaces/index';
+import { User, SeqUpdateResponse } from '../interfaces/index';
 
 const userDAO: UserDAO = new UserDAO(userModel);
 const usersService = new UserService(userDAO);
@@ -63,7 +63,7 @@ const putUserById: (
     const reqUser: User = req.body;
 
     try {
-        const result: UpdateUserResponse = await usersService.updateUser(
+        const result: SeqUpdateResponse<User> = await usersService.updateUser(
             id,
             reqUser
         );
