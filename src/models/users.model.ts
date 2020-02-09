@@ -1,6 +1,7 @@
 import { DataTypes, Model, BuildOptions } from 'sequelize';
 
 import { db } from './db';
+import { GroupsModel } from './groups.model';
 
 interface UsersModelSeq extends Model {
     readonly id: string;

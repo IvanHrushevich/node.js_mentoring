@@ -10,8 +10,7 @@ export class UserDAO {
         this._usersModel = usersModel;
     }
 
-    async getAllUsers(): Promise<User[]> {
-        await this._usersModel.sync();
+    getAllUsers(): Promise<User[]> {
         return this._usersModel.findAll();
     }
 

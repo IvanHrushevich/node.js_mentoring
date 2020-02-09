@@ -8,8 +8,7 @@ export class GroupDAO {
         this._groupsModel = groupsModel;
     }
 
-    async getAllGroups(): Promise<Group[]> {
-        await this._groupsModel.sync();
+    getAllGroups(): Promise<Group[]> {
         return this._groupsModel.findAll();
     }
 

@@ -10,6 +10,5 @@ export const db: Sequelize = new Sequelize(connectionURI, {
     },
     define: {
         timestamps: false
-    },
-    sync: { force: true }
+    }
 });
