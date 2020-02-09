@@ -1,34 +1,34 @@
 import { Group, SeqUpdateResponse } from '../interfaces/index';
-import { GroupModelStatic } from '../models/index';
+import { GroupsModelStatic } from '../models/index';
 
 export class GroupDAO {
-    _groupModel: GroupModelStatic;
+    _groupsModel: GroupsModelStatic;
 
-    constructor(groupModel: GroupModelStatic) {
-        this._groupModel = groupModel;
+    constructor(groupsModel: GroupsModelStatic) {
+        this._groupsModel = groupsModel;
     }
 
     async getAllGroups(): Promise<Group[]> {
-        await this._groupModel.sync();
-        return this._groupModel.findAll();
+        await this._groupsModel.sync();
+        return this._groupsModel.findAll();
     }
 
     getGroupById(id: string): Promise<Group | null> {
-        return this._groupModel.findOne({ where: { id } });
+        return this._groupsModel.findOne({ where: { id } });
     }
 
     saveGroup(group: Group): Promise<Group> {
-        return this._groupModel.create(group);
+        return this._groupsModel.create(group);
     }
 
     updateGroup(
         id: string,
         reqGroup: Group
     ): Promise<SeqUpdateResponse<Group>> {
-        return this._groupModel.update(reqGroup, { where: { id } });
+        return this._groupsModel.update(reqGroup, { where: { id } });
     }
 
     deleteGroup(id: string): Promise<number> {
-        return this._groupModel.destroy({ where: { id } });
+        return this._groupsModel.destroy({ where: { id } });
     }
 }

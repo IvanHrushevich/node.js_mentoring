@@ -2,19 +2,19 @@ import { DataTypes, Model, BuildOptions } from 'sequelize';
 
 import { db } from './db';
 
-interface UserModelSeq extends Model {
+interface UsersModelSeq extends Model {
     readonly id: string;
     readonly login: string;
     readonly password: string;
     readonly age: number;
 }
 
-export type UserModelStatic = typeof Model & {
-    new (values?: object, options?: BuildOptions): UserModelSeq;
+export type UsersModelStatic = typeof Model & {
+    new (values?: object, options?: BuildOptions): UsersModelSeq;
 };
 
-const UserModel: UserModelStatic = <UserModelStatic>db.define(
-    'user',
+const UsersModel: UsersModelStatic = <UsersModelStatic>db.define(
+    'Users',
     {
         login: {
             type: DataTypes.STRING,
@@ -40,4 +40,4 @@ const UserModel: UserModelStatic = <UserModelStatic>db.define(
     }
 );
 
-export { UserModel };
+export { UsersModel };

@@ -3,17 +3,17 @@ import { DataTypes, Model, BuildOptions } from 'sequelize';
 import { Permission } from '../interfaces/index';
 import { db } from './db';
 
-interface GroupModelSeq extends Model {
+interface GroupsModelSeq extends Model {
     readonly id: string;
     readonly name: string;
     readonly permissions: Permission[];
 }
 
-export type GroupModelStatic = typeof Model & {
-    new (values?: object, options?: BuildOptions): GroupModelSeq;
+export type GroupsModelStatic = typeof Model & {
+    new (values?: object, options?: BuildOptions): GroupsModelSeq;
 };
 
-const GroupModel: GroupModelStatic = <GroupModelStatic>db.define('group', {
+const GroupsModel: GroupsModelStatic = <GroupsModelStatic>db.define('Groups', {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
@@ -29,4 +29,4 @@ const GroupModel: GroupModelStatic = <GroupModelStatic>db.define('group', {
     }
 });
 
-export { GroupModel };
+export { GroupsModel };

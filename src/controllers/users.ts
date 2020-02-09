@@ -2,10 +2,10 @@ import express from 'express';
 
 import { UserService } from '../services/index';
 import { UserDAO } from '../data-access/index';
-import { UserModel } from '../models/index';
+import { UsersModel } from '../models/index';
 import { User, SeqUpdateResponse } from '../interfaces/index';
 
-const userDAO: UserDAO = new UserDAO(UserModel);
+const userDAO: UserDAO = new UserDAO(UsersModel);
 const usersService = new UserService(userDAO);
 
 const getById: (

@@ -1,3 +1,3 @@
 export * from './db';
-export * from './user.model';
-export * from './group.model';
+export * from './users.model';
+export * from './groups.model';

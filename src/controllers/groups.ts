@@ -1,11 +1,11 @@
 import express from 'express';
 
 import { GroupDAO } from '../data-access/index';
-import { GroupModel } from '../models/index';
+import { GroupsModel } from '../models/index';
 import { Group, SeqUpdateResponse } from '../interfaces/index';
 import { GroupService } from '../services/index';
 
-const groupDAO: GroupDAO = new GroupDAO(GroupModel);
+const groupDAO: GroupDAO = new GroupDAO(GroupsModel);
 const groupService = new GroupService(groupDAO);
 
 const getById: (
