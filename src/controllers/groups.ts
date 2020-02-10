@@ -5,7 +5,7 @@ import { GroupsModel } from '../models/index';
 import { Group, SeqUpdateResponse } from '../interfaces/index';
 import { GroupService } from '../services/index';
 
-const groupDAO: GroupDAO = new GroupDAO(GroupsModel);
+export const groupDAO: GroupDAO = new GroupDAO(GroupsModel);
 const groupService = new GroupService(groupDAO);
 
 const getById: (

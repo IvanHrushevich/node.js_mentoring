@@ -1,7 +1,6 @@
 import { DataTypes, Model, BuildOptions } from 'sequelize';
 
 import { db } from './db';
-import { GroupsModel } from './groups.model';
 
 interface UsersModelSeq extends Model {
     readonly id: string;
@@ -14,7 +13,7 @@ export type UsersModelStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): UsersModelSeq;
 };
 
-const UsersModel: UsersModelStatic = <UsersModelStatic>db.define(
+export const UsersModel: UsersModelStatic = <UsersModelStatic>db.define(
     'Users',
     {
         login: {
@@ -40,5 +39,3 @@ const UsersModel: UsersModelStatic = <UsersModelStatic>db.define(
         paranoid: true
     }
 );
-
-export { UsersModel };

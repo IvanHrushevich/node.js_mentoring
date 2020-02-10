@@ -1,13 +1,21 @@
-import { Op } from 'sequelize';
+import { Op, fn } from 'sequelize';
 
-import { User, SeqUpdateResponse } from '../interfaces/index';
-import { UsersModelStatic } from '../models/index';
+import {
+    User,
+    SeqUpdateResponse,
+    UserCreateRequest,
+    Group
+} from '../interfaces/index';
+import { UsersModelStatic, db } from '../models/index';
+import { GroupDAO } from './group.dao';
 
 export class UserDAO {
     _usersModel: UsersModelStatic;
+    _groupDao: GroupDAO;
 
-    constructor(usersModel: UsersModelStatic) {
+    constructor(usersModel: UsersModelStatic, groupDao: GroupDAO) {
         this._usersModel = usersModel;
+        this._groupDao = groupDao;
     }
 
     getAllUsers(): Promise<User[]> {
@@ -30,8 +38,36 @@ export class UserDAO {
         return this._usersModel.findOne({ where: { id } });
     }
 
-    saveUser(user: User): Promise<User> {
-        return this._usersModel.create(user);
+    async saveUser(reqUser: UserCreateRequest): Promise<User> {
+        const { login, password, age, groups } = reqUser;
+
+        const user: User = {
+            login,
+            password,
+            age
+        };
+
+        try {
+            const result = await db.transaction(async t => {
+                for (let group of groups) {
+                    const foundGroup: Group | null = await this._groupDao.getGroupByName(
+                        group
+                    );
+
+                    if (!foundGroup) {
+                        throw 'No such group';
+                    }
+                }
+
+                const savedUser: User = await this._usersModel.create(user);
+
+                return savedUser;
+            });
+
+            return result;
+        } catch (error) {
+            return Promise.reject(error);
+        }
     }
 
     updateUser(id: string, reqUser: User): Promise<SeqUpdateResponse<User>> {

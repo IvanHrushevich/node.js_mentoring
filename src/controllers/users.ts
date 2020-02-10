@@ -4,8 +4,9 @@ import { UserService } from '../services/index';
 import { UserDAO } from '../data-access/index';
 import { UsersModel } from '../models/index';
 import { User, SeqUpdateResponse } from '../interfaces/index';
+import { groupDAO } from './groups';
 
-const userDAO: UserDAO = new UserDAO(UsersModel);
+const userDAO: UserDAO = new UserDAO(UsersModel, groupDAO);
 const usersService = new UserService(userDAO);
 
 const getById: (

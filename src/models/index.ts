@@ -5,8 +5,6 @@ import { db } from './db';
 UsersModel.belongsToMany(GroupsModel, { through: 'UsersGroups' });
 GroupsModel.belongsToMany(UsersModel, { through: 'UsersGroups' });
 
-db.sync({ force: true }).then(() =>
-    console.log('All models were synchronized successfully.')
-);
+db.sync().then(() => console.log('All models were synchronized successfully.'));
 
 export { db, GroupsModel, GroupsModelStatic, UsersModel, UsersModelStatic };

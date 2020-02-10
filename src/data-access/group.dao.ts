@@ -16,6 +16,10 @@ export class GroupDAO {
         return this._groupsModel.findOne({ where: { id } });
     }
 
+    getGroupByName(name: string): Promise<Group | null> {
+        return this._groupsModel.findOne({ where: { name } });
+    }
+
     saveGroup(group: Group): Promise<Group> {
         return this._groupsModel.create(group);
     }

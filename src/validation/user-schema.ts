@@ -13,5 +13,7 @@ export const userSchema: Joi.ObjectSchema = Joi.object({
 
     password: Joi.string()
         .pattern(regLettersAndNumbers)
-        .required()
+        .required(),
+
+    groups: Joi.array()
 });

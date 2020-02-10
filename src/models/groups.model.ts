@@ -13,20 +13,21 @@ export type GroupsModelStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): GroupsModelSeq;
 };
 
-const GroupsModel: GroupsModelStatic = <GroupsModelStatic>db.define('Groups', {
-    id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    permissions: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false
+export const GroupsModel: GroupsModelStatic = <GroupsModelStatic>db.define(
+    'Groups',
+    {
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        permissions: {
+            type: DataTypes.ARRAY(DataTypes.STRING),
+            allowNull: false
+        }
     }
-});
-
-export { GroupsModel };
+);
