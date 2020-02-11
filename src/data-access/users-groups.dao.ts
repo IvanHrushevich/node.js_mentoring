@@ -10,9 +10,10 @@ export class UsersGroupsDAO {
 
     saveUserGroup(userId: string, groupId: string): Promise<UserGroup> {
         const userGroup: UserGroup = {
-            userId,
-            groupId
+            UserId: userId,
+            GroupId: groupId
         };
+        console.log('userGroup', userGroup);
         return this._usersGroupsModel.create(userGroup);
     }
 }

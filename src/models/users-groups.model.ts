@@ -3,8 +3,8 @@ import { DataTypes, Model, BuildOptions } from 'sequelize';
 import { db } from './db';
 
 interface UsersGroupsModelSeq extends Model {
-    readonly userId: string;
-    readonly groupId: string;
+    readonly UserId: string;
+    readonly GroupId: string;
 }
 
 export type UsersGroupsModelStatic = typeof Model & {
@@ -14,10 +14,10 @@ export type UsersGroupsModelStatic = typeof Model & {
 export const UsersGroupsModel: UsersGroupsModelStatic = <
     UsersGroupsModelStatic
 >db.define('UsersGroups', {
-    userId: {
+    UserId: {
         type: DataTypes.UUID
     },
-    groupId: {
+    GroupId: {
         type: DataTypes.UUID
     }
 });

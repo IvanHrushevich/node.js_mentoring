@@ -1,4 +1,4 @@
 export interface UserGroup {
-    userId: string;
-    groupId: string;
+    UserId: string;
+    GroupId: string;
 }

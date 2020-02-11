@@ -67,7 +67,7 @@ export class UserDAO {
                         throw 'No such group';
                     }
 
-                    const savedUserGroup = this._usersGroupsDAO.saveUserGroup(
+                    await this._usersGroupsDAO.saveUserGroup(
                         <string>savedUser.id,
                         foundGroup.id
                     );
