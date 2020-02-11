@@ -13,7 +13,15 @@ export class UsersGroupsDAO {
             UserId: userId,
             GroupId: groupId
         };
-        console.log('userGroup', userGroup);
+
         return this._usersGroupsModel.create(userGroup);
+    }
+
+    getAllUserGroups(userId: string): Promise<any> {
+        return this._usersGroupsModel.findAll({
+            where: { UserId: userId },
+            attributes: ['GroupId'],
+            raw: true
+        });
     }
 }

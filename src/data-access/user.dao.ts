@@ -6,9 +6,20 @@ import {
     UserCreateRequest,
     Group
 } from '../interfaces/index';
-import { UsersModelStatic, db } from '../models/index';
+import { UsersModelStatic, db, GroupsModel } from '../models/index';
 import { GroupDAO } from './group.dao';
 import { UsersGroupsDAO } from './users-groups.dao';
+
+const includeOption = {
+    include: [
+        {
+            model: GroupsModel,
+            as: 'groups',
+            required: false,
+            through: { attributes: [] }
+        }
+    ]
+};
 
 export class UserDAO {
     _usersModel: UsersModelStatic;
@@ -26,7 +37,7 @@ export class UserDAO {
     }
 
     getAllUsers(): Promise<User[]> {
-        return this._usersModel.findAll();
+        return this._usersModel.findAll({ ...includeOption });
     }
 
     getFilteredUsers(
@@ -34,6 +45,7 @@ export class UserDAO {
         limit: number | undefined
     ): Promise<User[]> {
         return this._usersModel.findAll({
+            ...includeOption,
             where: {
                 login: { [Op.substring]: searchStr }
             },
@@ -42,11 +54,12 @@ export class UserDAO {
     }
 
     getUserById(id: string): Promise<User | null> {
-        return this._usersModel.findOne({ where: { id } });
+        return this._usersModel.findOne({ ...includeOption, where: { id } });
     }
 
     async saveUser(reqUser: UserCreateRequest): Promise<User> {
-        const { login, password, age, groups } = reqUser;
+        const { login, password, age } = reqUser;
+        const groupIds: string[] = reqUser.groups;
 
         const user: User = {
             login,
@@ -58,9 +71,9 @@ export class UserDAO {
             const result = await db.transaction(async () => {
                 const savedUser: User = await this._usersModel.create(user);
 
-                for (let group of groups) {
-                    const foundGroup: Group | null = await this._groupDao.getGroupByName(
-                        group
+                for (let groupId of groupIds) {
+                    const foundGroup: Group | null = await this._groupDao.getGroupById(
+                        groupId
                     );
 
                     if (!foundGroup) {
@@ -82,7 +95,32 @@ export class UserDAO {
         }
     }
 
-    updateUser(id: string, reqUser: User): Promise<SeqUpdateResponse<User>> {
+    async updateUser(
+        id: string,
+        reqUser: Partial<UserCreateRequest>
+    ): Promise<SeqUpdateResponse<User>> {
+        // try {
+        //     const result: any = await db.transaction(async () => {
+        //         //
+        //         if (!reqUser.groups) {
+        //             return this._usersModel.update(reqUser, { where: { id } });
+        //         } else {
+        //             const groupsInDb: {
+        //                 GroupId: string;
+        //             }[] = await this._usersGroupsDAO.getAllUserGroups(id);
+
+        //             const existingGroups: string[] = groupsInDb.map(
+        //                 (obj: { GroupId: string }) => obj.GroupId
+        //             );
+
+        //             console.log('existingGroups', existingGroups);
+        //         }
+
+        //         return result;
+        //     });
+        // } catch (error) {
+        //     return Promise.reject(error);
+        // }
         return this._usersModel.update(reqUser, { where: { id } });
     }
 

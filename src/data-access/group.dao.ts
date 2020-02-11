@@ -1,5 +1,17 @@
 import { Group, SeqUpdateResponse } from '../interfaces/index';
-import { GroupsModelStatic } from '../models/index';
+import { GroupsModelStatic, UsersModel } from '../models/index';
+
+const includeOption = {
+    include: [
+        {
+            model: UsersModel,
+            as: 'users',
+            required: false,
+            attributes: ['id', 'login'],
+            through: { attributes: [] }
+        }
+    ]
+};
 
 export class GroupDAO {
     _groupsModel: GroupsModelStatic;
@@ -9,15 +21,11 @@ export class GroupDAO {
     }
 
     getAllGroups(): Promise<Group[]> {
-        return this._groupsModel.findAll();
+        return this._groupsModel.findAll({ ...includeOption });
     }
 
     getGroupById(id: string): Promise<Group | null> {
-        return this._groupsModel.findOne({ where: { id } });
-    }
-
-    getGroupByName(name: string): Promise<Group | null> {
-        return this._groupsModel.findOne({ where: { name } });
+        return this._groupsModel.findOne({ ...includeOption, where: { id } });
     }
 
     saveGroup(group: Group): Promise<Group> {

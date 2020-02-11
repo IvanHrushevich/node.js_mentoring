@@ -1,6 +1,8 @@
 import { DataTypes, Model, BuildOptions } from 'sequelize';
 
 import { db } from './db';
+import { UsersModel } from './users.model';
+import { GroupsModel } from './groups.model';
 
 interface UsersGroupsModelSeq extends Model {
     readonly UserId: string;
@@ -15,9 +17,15 @@ export const UsersGroupsModel: UsersGroupsModelStatic = <
     UsersGroupsModelStatic
 >db.define('UsersGroups', {
     UserId: {
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        references: {
+            model: UsersModel
+        }
     },
     GroupId: {
-        type: DataTypes.UUID
+        type: DataTypes.UUID,
+        references: {
+            model: GroupsModel
+        }
     }
 });
