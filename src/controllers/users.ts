@@ -1,12 +1,17 @@
 import express from 'express';
 
 import { UserService } from '../services/index';
-import { UserDAO } from '../data-access/index';
-import { UsersModel } from '../models/index';
+import { UserDAO, UsersGroupsDAO } from '../data-access/index';
+import {
+    UsersModel,
+    UsersGroupsModelStatic,
+    UsersGroupsModel
+} from '../models/index';
 import { User, SeqUpdateResponse } from '../interfaces/index';
 import { groupDAO } from './groups';
 
-const userDAO: UserDAO = new UserDAO(UsersModel, groupDAO);
+const usersGroupsDAO: UsersGroupsDAO = new UsersGroupsDAO(UsersGroupsModel);
+const userDAO: UserDAO = new UserDAO(UsersModel, groupDAO, usersGroupsDAO);
 const usersService = new UserService(userDAO);
 
 const getById: (

@@ -1,4 +1,4 @@
-import { Op, fn } from 'sequelize';
+import { Op } from 'sequelize';
 
 import {
     User,
@@ -8,14 +8,21 @@ import {
 } from '../interfaces/index';
 import { UsersModelStatic, db } from '../models/index';
 import { GroupDAO } from './group.dao';
+import { UsersGroupsDAO } from './users-groups.dao';
 
 export class UserDAO {
     _usersModel: UsersModelStatic;
     _groupDao: GroupDAO;
+    _usersGroupsDAO: UsersGroupsDAO;
 
-    constructor(usersModel: UsersModelStatic, groupDao: GroupDAO) {
+    constructor(
+        usersModel: UsersModelStatic,
+        groupDao: GroupDAO,
+        usersGroupsDAO: UsersGroupsDAO
+    ) {
         this._usersModel = usersModel;
         this._groupDao = groupDao;
+        this._usersGroupsDAO = usersGroupsDAO;
     }
 
     getAllUsers(): Promise<User[]> {
@@ -48,7 +55,9 @@ export class UserDAO {
         };
 
         try {
-            const result = await db.transaction(async t => {
+            const result = await db.transaction(async () => {
+                const savedUser: User = await this._usersModel.create(user);
+
                 for (let group of groups) {
                     const foundGroup: Group | null = await this._groupDao.getGroupByName(
                         group
@@ -57,9 +66,12 @@ export class UserDAO {
                     if (!foundGroup) {
                         throw 'No such group';
                     }
-                }
 
-                const savedUser: User = await this._usersModel.create(user);
+                    const savedUserGroup = this._usersGroupsDAO.saveUserGroup(
+                        <string>savedUser.id,
+                        foundGroup.id
+                    );
+                }
 
                 return savedUser;
             });
