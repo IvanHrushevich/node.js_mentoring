@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 import { UsersGroupsModelStatic } from '../models/index';
 import { UserGroup } from '../interfaces/index';
 
@@ -15,6 +17,12 @@ export class UsersGroupsDAO {
         };
 
         return this._usersGroupsModel.create(userGroup);
+    }
+
+    deleteUserGroup(userId: string, groupId: string): Promise<any> {
+        return this._usersGroupsModel.destroy({
+            where: { [Op.and]: [{ UserId: userId }, { GroupId: groupId }] }
+        });
     }
 
     getAllUserGroups(userId: string): Promise<any> {

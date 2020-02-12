@@ -1,14 +1,13 @@
 import { Op } from 'sequelize';
 
-import {
-    User,
-    SeqUpdateResponse,
-    UserCreateRequest,
-    Group
-} from '../interfaces/index';
+import { User, UserCreateRequest, Group } from '../interfaces/index';
 import { UsersModelStatic, db, GroupsModel } from '../models/index';
 import { GroupDAO } from './group.dao';
 import { UsersGroupsDAO } from './users-groups.dao';
+
+interface ObjectWithMathedProps {
+    [key: string]: boolean;
+}
 
 const includeOption = {
     include: [
@@ -96,32 +95,53 @@ export class UserDAO {
     }
 
     async updateUser(
-        id: string,
+        userId: string,
         reqUser: Partial<UserCreateRequest>
-    ): Promise<SeqUpdateResponse<User>> {
-        // try {
-        //     const result: any = await db.transaction(async () => {
-        //         //
-        //         if (!reqUser.groups) {
-        //             return this._usersModel.update(reqUser, { where: { id } });
-        //         } else {
-        //             const groupsInDb: {
-        //                 GroupId: string;
-        //             }[] = await this._usersGroupsDAO.getAllUserGroups(id);
+    ): Promise<any> {
+        try {
+            const result: any = await db.transaction(async () => {
+                if (!reqUser.groups) {
+                    return this._usersModel.update(reqUser, {
+                        where: { id: userId }
+                    });
+                } else {
+                    const groupsInDb: {
+                        GroupId: string;
+                    }[] = await this._usersGroupsDAO.getAllUserGroups(userId);
 
-        //             const existingGroups: string[] = groupsInDb.map(
-        //                 (obj: { GroupId: string }) => obj.GroupId
-        //             );
+                    const existingGroups: ObjectWithMathedProps = groupsInDb
+                        .map((obj: { GroupId: string }) => obj.GroupId)
+                        .reduce((acc: ObjectWithMathedProps, curr: string) => {
+                            acc[curr] = false;
+                            return acc;
+                        }, {});
 
-        //             console.log('existingGroups', existingGroups);
-        //         }
+                    for (let groupId of reqUser.groups) {
+                        if (groupId in existingGroups) {
+                            existingGroups[groupId] = true;
+                        } else {
+                            await this._usersGroupsDAO.saveUserGroup(
+                                userId,
+                                groupId
+                            );
+                        }
+                    }
 
-        //         return result;
-        //     });
-        // } catch (error) {
-        //     return Promise.reject(error);
-        // }
-        return this._usersModel.update(reqUser, { where: { id } });
+                    for (let groupId in existingGroups) {
+                        if (!existingGroups[groupId]) {
+                            await this._usersGroupsDAO.deleteUserGroup(
+                                userId,
+                                groupId
+                            );
+                        }
+                    }
+                }
+
+                return result;
+            });
+        } catch (error) {
+            return Promise.reject(error);
+        }
     }
 
     deleteUser(id: string): Promise<number> {
