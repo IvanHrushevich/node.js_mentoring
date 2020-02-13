@@ -1,11 +1,13 @@
-import { GroupDAO } from '../data-access/index';
+import { GroupDAO, UsersGroupsDAO } from '../data-access/index';
 import { SeqUpdateResponse, Group } from '../interfaces/index';
 
 export class GroupService {
     _groupDAO: GroupDAO;
+    _usersGroupsDAO: UsersGroupsDAO;
 
-    constructor(groupDAO: GroupDAO) {
+    constructor(groupDAO: GroupDAO, usersGroupsDAO: UsersGroupsDAO) {
         this._groupDAO = groupDAO;
+        this._usersGroupsDAO = usersGroupsDAO;
     }
 
     getGroupById(id: string): Promise<Group | null> {
@@ -29,5 +31,9 @@ export class GroupService {
 
     deleteGroup(id: string): Promise<number> {
         return this._groupDAO.deleteGroup(id);
+    }
+
+    addUsersToGroup(groupId: string, userIds: string[]): Promise<any> {
+        return this._usersGroupsDAO.addUsersToGroup(groupId, userIds);
     }
 }

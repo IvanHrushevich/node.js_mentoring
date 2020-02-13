@@ -1,5 +1,5 @@
 import { Group, SeqUpdateResponse } from '../interfaces/index';
-import { GroupsModelStatic, UsersModel } from '../models/index';
+import { GroupsModelStatic, UsersModel, db } from '../models/index';
 
 const includeOption = {
     include: [

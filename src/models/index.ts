@@ -9,6 +9,7 @@ UsersModel.belongsToMany(GroupsModel, {
     through: UsersGroupsModel,
     as: 'groups'
 });
+
 GroupsModel.belongsToMany(UsersModel, {
     through: UsersGroupsModel,
     as: 'users'

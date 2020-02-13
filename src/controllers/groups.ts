@@ -1,12 +1,13 @@
 import express from 'express';
 
-import { GroupDAO } from '../data-access/index';
-import { GroupsModel } from '../models/index';
+import { GroupDAO, UsersGroupsDAO } from '../data-access/index';
+import { GroupsModel, UsersGroupsModel } from '../models/index';
 import { Group, SeqUpdateResponse } from '../interfaces/index';
 import { GroupService } from '../services/index';
 
 export const groupDAO: GroupDAO = new GroupDAO(GroupsModel);
-const groupService = new GroupService(groupDAO);
+const usersGroupsDAO: UsersGroupsDAO = new UsersGroupsDAO(UsersGroupsModel);
+const groupService = new GroupService(groupDAO, usersGroupsDAO);
 
 const getById: (
     req: express.Request,
@@ -39,6 +40,20 @@ const postGroup: (
     try {
         const savedGroup: Group = await groupService.saveGroup(group);
         res.status(201).json(savedGroup);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+};
+
+const postAddUsersToGroup: (
+    req: express.Request,
+    res: express.Response
+) => Promise<void> = async (req, res) => {
+    const groupId: string = req.params.id;
+    const userIds: string[] = req.body;
+
+    try {
+        await groupService.addUsersToGroup(groupId, userIds);
     } catch (error) {
         res.status(400).json(error);
     }
@@ -80,6 +95,7 @@ export const groupsRouter: express.Router = express.Router();
 
 groupsRouter.get('/:id', getById);
 groupsRouter.get('/', getAllGroups);
+groupsRouter.post('/addUsersToGroup/:id', postAddUsersToGroup);
 groupsRouter.post('/', postGroup);
 groupsRouter.put('/:id', putGroupById);
 groupsRouter.delete('/:id', deleteGroupById);

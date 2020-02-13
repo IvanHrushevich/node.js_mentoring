@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 
-import { UsersGroupsModelStatic } from '../models/index';
+import { UsersGroupsModelStatic, db } from '../models/index';
 import { UserGroup } from '../interfaces/index';
 
 export class UsersGroupsDAO {
@@ -31,5 +31,19 @@ export class UsersGroupsDAO {
             attributes: ['GroupId'],
             raw: true
         });
+    }
+
+    async addUsersToGroup(groupId: string, userIds: string[]): Promise<any> {
+        try {
+            const result = await db.transaction(async () => {
+                for (let userId of userIds) {
+                    await this.saveUserGroup(userId, groupId);
+                }
+            });
+
+            return result;
+        } catch (error) {
+            return Promise.reject(error);
+        }
     }
 }

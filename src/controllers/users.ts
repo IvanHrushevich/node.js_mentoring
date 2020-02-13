@@ -2,11 +2,7 @@ import express from 'express';
 
 import { UserService } from '../services/index';
 import { UserDAO, UsersGroupsDAO } from '../data-access/index';
-import {
-    UsersModel,
-    UsersGroupsModelStatic,
-    UsersGroupsModel
-} from '../models/index';
+import { UsersModel, UsersGroupsModel } from '../models/index';
 import { User, SeqUpdateResponse } from '../interfaces/index';
 import { groupDAO } from './groups';
 
