@@ -25,6 +25,8 @@ export {
     UsersGroupsModelStatic
 };
 
+// request body examples
+
 // {
 // 	"login": "Kate",
 // 	"age": 22,

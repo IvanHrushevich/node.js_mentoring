@@ -33,7 +33,7 @@ export class GroupService {
         return this._groupDAO.deleteGroup(id);
     }
 
-    addUsersToGroup(groupId: string, userIds: string[]): Promise<any> {
+    addUsersToGroup(groupId: string, userIds: string[]): Promise<boolean> {
         return this._usersGroupsDAO.addUsersToGroup(groupId, userIds);
     }
 }

@@ -53,7 +53,8 @@ const postAddUsersToGroup: (
     const userIds: string[] = req.body;
 
     try {
-        await groupService.addUsersToGroup(groupId, userIds);
+        const result = await groupService.addUsersToGroup(groupId, userIds);
+        res.status(200).json(result);
     } catch (error) {
         res.status(400).json(error);
     }

@@ -2,7 +2,11 @@ import { ValidationResult } from '@hapi/joi';
 
 import { userSchema, errorResponse } from '../validation/index';
 import { UserDAO } from '../data-access/index';
-import { User, SeqUpdateResponse } from '../interfaces/index';
+import {
+    User,
+    SeqUpdateResponse,
+    UserCreateRequest
+} from '../interfaces/index';
 
 export class UserService {
     _userDAO: UserDAO;
@@ -27,7 +31,7 @@ export class UserService {
             : this._userDAO.getFilteredUsers(searchStr, limit);
     }
 
-    saveUser(user: User): Promise<User> {
+    saveUser(user: UserCreateRequest): Promise<User> {
         const validationResult: ValidationResult = userSchema.validate(user, {
             abortEarly: false,
             allowUnknown: false

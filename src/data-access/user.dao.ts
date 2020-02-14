@@ -144,7 +144,20 @@ export class UserDAO {
         }
     }
 
-    deleteUser(id: string): Promise<number> {
-        return this._usersModel.destroy({ where: { id } });
+    async deleteUser(id: string): Promise<number> {
+        try {
+            const result = await db.transaction(async () => {
+                await this._usersGroupsDAO.deleteUserGroup(id);
+                const response = await this._usersModel.destroy({
+                    where: { id }
+                });
+
+                return response;
+            });
+
+            return result;
+        } catch (error) {
+            return Promise.reject(error);
+        }
     }
 }
