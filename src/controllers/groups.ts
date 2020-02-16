@@ -1,13 +1,12 @@
 import express from 'express';
 
-import { GroupDAO, UsersGroupsDAO } from '../data-access/index';
-import { GroupsModel, UsersGroupsModel } from '../models/index';
+import { GroupDAO } from '../data-access/index';
+import { GroupsModel } from '../models/index';
 import { Group, SeqUpdateResponse } from '../interfaces/index';
 import { GroupService } from '../services/index';
 
 export const groupDAO: GroupDAO = new GroupDAO(GroupsModel);
-const usersGroupsDAO: UsersGroupsDAO = new UsersGroupsDAO(UsersGroupsModel);
-const groupService = new GroupService(groupDAO, usersGroupsDAO);
+const groupService = new GroupService(groupDAO);
 
 const getById: (
     req: express.Request,

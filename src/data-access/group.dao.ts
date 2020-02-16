@@ -42,4 +42,26 @@ export class GroupDAO {
     deleteGroup(id: string): Promise<number> {
         return this._groupsModel.destroy({ where: { id } });
     }
+
+    async addUsersToGroup(
+        groupId: string,
+        userIds: string[]
+    ): Promise<boolean> {
+        try {
+            const result = await db.transaction(async t => {
+                const group = await this._groupsModel.findOne({
+                    where: { id: groupId },
+                    transaction: t
+                });
+
+                await (<any>group).addUsers(userIds, { transaction: t });
+
+                return true;
+            });
+
+            return result;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
 }

@@ -1,37 +1,28 @@
 import { GroupsModel, GroupsModelStatic } from './groups.model';
 import { UsersModel, UsersModelStatic } from './users.model';
 import { db } from './db';
-import { UsersGroupsModel, UsersGroupsModelStatic } from './users-groups.model';
 
 db.sync().then(() => console.log('All models were synchronized successfully.'));
 
 UsersModel.belongsToMany(GroupsModel, {
-    through: UsersGroupsModel,
+    through: 'UserGroup',
     as: 'groups'
 });
 
 GroupsModel.belongsToMany(UsersModel, {
-    through: UsersGroupsModel,
+    through: 'UserGroup',
     as: 'users'
 });
 
-export {
-    db,
-    GroupsModel,
-    GroupsModelStatic,
-    UsersModel,
-    UsersModelStatic,
-    UsersGroupsModel,
-    UsersGroupsModelStatic
-};
+export { db, GroupsModel, GroupsModelStatic, UsersModel, UsersModelStatic };
 
 // request body examples
 
 // {
-// 	"login": "Kate",
+// 	"login": "Alex",
 // 	"age": 22,
 // 	"password": "asdAsd123",
-// 	"groups": ["ffeaa016-989f-4a6c-9fdb-89a07b9385c0"]
+// 	"groups": ["77f947cb-c327-4569-9393-a8dbe588fe94", "8ef91029-5c1e-45bf-a761-3858190354b0"]
 // }
 
 // {
