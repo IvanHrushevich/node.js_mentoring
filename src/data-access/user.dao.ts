@@ -4,10 +4,6 @@ import { User, UserCreateRequest, Group } from '../interfaces/index';
 import { UsersModelStatic, db, GroupsModel } from '../models/index';
 import { GroupDAO } from './group.dao';
 
-interface ObjectWithMathedProps {
-    [key: string]: boolean;
-}
-
 const includeOption = {
     include: [
         {
@@ -65,20 +61,10 @@ export class UserDAO {
                     transaction: t
                 });
 
-                for (let groupId of groupIds) {
-                    const foundGroup: Group | null = await this._groupDao.getGroupById(
-                        groupId
-                    );
-
-                    if (!foundGroup) {
-                        throw 'No such group';
-                    }
-
-                    // sequelize types
-                    await (<any>savedUser).addGroups(groupId, {
-                        transaction: t
-                    });
-                }
+                // sequelize types
+                await (<any>savedUser).addGroups(groupIds, {
+                    transaction: t
+                });
 
                 return savedUser;
             });
