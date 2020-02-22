@@ -1,22 +1,24 @@
-import { Sequelize } from 'sequelize';
+import { GroupsModel, GroupsModelStatic } from './groups.model';
+import { UsersModel, UsersModelStatic } from './users.model';
+import { db } from './db';
 
-import { UserModel, UserModelStatic } from './user.model';
+db.sync().then(() => console.log('All models were synchronized successfully.'));
 
-const connectionURI: string =
-    'postgres://agzctnieexodcz:bda6e1e7a30c12426c357809944e754486e23d4ed40c473146051e078c875e15@ec2-54-195-252-243.eu-west-1.compute.amazonaws.com:5432/dfpm81bm9safgr';
+UsersModel.associate();
+GroupsModel.associate();
 
-const db: Sequelize = new Sequelize(connectionURI, {
-    dialect: 'postgres',
-    dialectOptions: {
-        ssl: true
-    },
-    define: {
-        timestamps: true,
-        paranoid: true
-    },
-    sync: { force: true }
-});
+export { db, GroupsModel, GroupsModelStatic, UsersModel, UsersModelStatic };
 
-export const userModel: UserModelStatic = <UserModelStatic>new UserModel(db);
+// request body examples
 
-export { UserModelStatic };
+// {
+// 	"login": "Alex",
+// 	"age": 22,
+// 	"password": "asdAsd123",
+// 	"groups": ["77f947cb-c327-4569-9393-a8dbe588fe94", "8ef91029-5c1e-45bf-a761-3858190354b0"]
+// }
+
+// {
+//     "name": "superadmin",
+//     "permissions": ["Read", "Write"]
+// }

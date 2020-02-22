@@ -2,10 +2,11 @@ import express from 'express';
 
 import { UserService } from '../services/index';
 import { UserDAO } from '../data-access/index';
-import { userModel } from '../models/index';
-import { User, UpdateUserResponse } from '../interfaces/index';
+import { UsersModel } from '../models/index';
+import { User, SeqUpdateResponse } from '../interfaces/index';
+import { groupDAO } from './groups';
 
-const userDAO: UserDAO = new UserDAO(userModel);
+const userDAO: UserDAO = new UserDAO(UsersModel, groupDAO);
 const usersService = new UserService(userDAO);
 
 const getById: (
@@ -63,7 +64,7 @@ const putUserById: (
     const reqUser: User = req.body;
 
     try {
-        const result: UpdateUserResponse = await usersService.updateUser(
+        const result: SeqUpdateResponse<User> = await usersService.updateUser(
             id,
             reqUser
         );
