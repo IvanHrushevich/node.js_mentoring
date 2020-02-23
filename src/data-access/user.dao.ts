@@ -41,8 +41,17 @@ export class UserDAO {
         });
     }
 
-    getUserById(id: string): Promise<User | null> {
-        return this._usersModel.findOne({ ...includeOption, where: { id } });
+    async getUserById(id: string): Promise<User | null> {
+        let user: User | null = null;
+
+        try {
+            user = await this._usersModel.findOne({
+                ...includeOption,
+                where: { id }
+            });
+        } catch {}
+
+        return user;
     }
 
     async saveUser(reqUser: UserCreateRequest): Promise<User> {

@@ -24,8 +24,17 @@ export class GroupDAO {
         return this._groupsModel.findAll({ ...includeOption });
     }
 
-    getGroupById(id: string): Promise<Group | null> {
-        return this._groupsModel.findOne({ ...includeOption, where: { id } });
+    async getGroupById(id: string): Promise<Group | null> {
+        let group: Group | null = null;
+
+        try {
+            group = await this._groupsModel.findOne({
+                ...includeOption,
+                where: { id }
+            });
+        } catch {}
+
+        return group;
     }
 
     saveGroup(group: Group): Promise<Group> {
