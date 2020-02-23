@@ -2,6 +2,7 @@ import express from 'express';
 
 import { usersRouter, groupsRouter } from './controllers/index';
 import { logger } from './logger';
+import { HttpError } from './utils/http-error';
 
 const app: express.Express = express();
 const port: string = process.env.PORT || '3000';
@@ -32,6 +33,7 @@ app.use(
 app.use('/users', usersRouter);
 app.use('/groups', groupsRouter);
 
+// error handling
 app.use(
     (
         err: any,
@@ -39,13 +41,31 @@ app.use(
         res: express.Response,
         next: express.NextFunction
     ) => {
-        console.log('!!!!!! ERROR', err);
         logger.log({
             level: 'error',
             message: `unhandled error: ${JSON.stringify(err)}`
         });
-        res.status(500).send(err);
+
+        if (err instanceof HttpError) {
+            res.status(err.status).send(err);
+        } else {
+            res.status(500).send(err);
+        }
     }
 );
+
+process
+    .on('unhandledRejection', err => {
+        logger.log({
+            level: 'error',
+            message: `unhandledRejection: ${err}`
+        });
+    })
+    .on('uncaughtException', err => {
+        logger.log({
+            level: 'error',
+            message: `uncaughtException: ${err}`
+        });
+    });
 
 app.listen(port, () => console.log(`Users app listening on port ${port}!`));
