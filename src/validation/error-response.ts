@@ -1,6 +1,6 @@
 import { ValidationErrorItem } from '@hapi/joi';
 
-import { HttpError } from './../utils/http-error';
+import { HttpError } from './../utils/index';
 
 export const errorResponse = (schemaErrors: ValidationErrorItem[]) => {
     const errors = schemaErrors.map(error => {
