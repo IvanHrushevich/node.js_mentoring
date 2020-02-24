@@ -90,7 +90,6 @@ const putGroupById: (
         );
         res.status(200).json(result);
     } catch (err) {
-        console.log('!!!!!!!!!!!!!!!!!!!!!!!!! err', err);
         const error: HttpError = createErrorBadRequest(err);
         next(error);
     }
