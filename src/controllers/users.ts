@@ -20,27 +20,19 @@ const errorBadRequest: HttpError = new HttpError(400, 'Bad request');
 
 class UsersController {
     @errorHandled
-    async getById(
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-    ) {
+    async getById(req: express.Request, res: express.Response) {
         const id: string = req.params.id;
         const user: User | null = await usersService.getUserById(id);
 
         if (user) {
             res.json(user);
         } else {
-            next(errorNotFoundById);
+            throw errorNotFoundById;
         }
     }
 
     @errorHandled
-    async getUsers(
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-    ) {
+    async getUsers(req: express.Request, res: express.Response) {
         const searchStr: string = req.query.login;
         const limit: number | undefined = Number(req.query.limit) || undefined;
 
@@ -57,32 +49,25 @@ class UsersController {
                 'Not found',
                 'No users were found with specified parameters'
             );
-            next(error);
+
+            throw error;
         }
     }
 
     @errorHandled
-    async postUser(
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-    ) {
+    async postUser(req: express.Request, res: express.Response) {
         const user = req.body;
 
         try {
             const savedUser: User = await usersService.saveUser(user);
             res.status(201).json(savedUser);
         } catch (error) {
-            next(error);
+            throw error;
         }
     }
 
     @errorHandled
-    async putUserById(
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-    ) {
+    async putUserById(req: express.Request, res: express.Response) {
         const id: string = req.params.id;
         const reqUser: User = req.body;
 
@@ -93,23 +78,19 @@ class UsersController {
             );
             res.status(200).json(result);
         } catch (err) {
-            next(errorBadRequest);
+            throw errorBadRequest;
         }
     }
 
     @errorHandled
-    async deleteUserById(
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-    ) {
+    async deleteUserById(req: express.Request, res: express.Response) {
         const id: string = req.params.id;
 
         try {
             const result: number = await usersService.deleteUser(id);
             res.status(200).json(result);
         } catch (err) {
-            next(errorNotFoundById);
+            throw errorNotFoundById;
         }
     }
 }
