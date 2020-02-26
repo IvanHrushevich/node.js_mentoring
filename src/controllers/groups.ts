@@ -4,7 +4,7 @@ import { GroupDAO } from '../data-access/index';
 import { GroupsModel } from '../models/index';
 import { Group, SeqUpdateResponse } from '../interfaces/index';
 import { GroupService } from '../services/index';
-import { HttpError } from '../utils/index';
+import { HttpError, errorHandled } from '../utils/index';
 
 export const groupDAO: GroupDAO = new GroupDAO(GroupsModel);
 const groupService = new GroupService(groupDAO);
@@ -19,102 +19,89 @@ const createErrorBadRequest: (detail: any) => HttpError = (detail = '') => {
     return new HttpError(400, 'Bad request', detail);
 };
 
-const getById: (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-) => Promise<void> = async (req, res, next) => {
-    const id: string = req.params.id;
-    const group: Group | null = await groupService.getGroupById(id);
+class GroupsController {
+    @errorHandled
+    async getById(req: express.Request, res: express.Response) {
+        const id: string = req.params.id;
+        const group: Group | null = await groupService.getGroupById(id);
 
-    if (group) {
-        res.json(group);
-    } else {
-        next(errorNotFoundById);
+        if (group) {
+            res.json(group);
+        } else {
+            throw errorNotFoundById;
+        }
     }
-};
 
-const getAllGroups: (
-    req: express.Request,
-    res: express.Response
-) => Promise<void> = async (req, res) => {
-    const groups: Group[] = await groupService.getAllGroups();
-    res.json(groups);
-};
-
-const postGroup: (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-) => Promise<void> = async (req, res, next) => {
-    const group = req.body;
-
-    try {
-        const savedGroup: Group = await groupService.saveGroup(group);
-        res.status(201).json(savedGroup);
-    } catch (err) {
-        const error: HttpError = createErrorBadRequest(err);
-        next(error);
+    @errorHandled
+    async getAllGroups(req: express.Request, res: express.Response) {
+        const groups: Group[] = await groupService.getAllGroups();
+        res.json(groups);
     }
-};
 
-const postAddUsersToGroup: (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-) => Promise<void> = async (req, res, next) => {
-    const groupId: string = req.params.id;
-    const userIds: string[] = req.body;
+    @errorHandled
+    async postGroup(req: express.Request, res: express.Response) {
+        const group = req.body;
 
-    try {
-        const result = await groupService.addUsersToGroup(groupId, userIds);
-        res.status(200).json(result);
-    } catch (err) {
-        const error: HttpError = createErrorBadRequest(err);
-        next(error);
+        try {
+            const savedGroup: Group = await groupService.saveGroup(group);
+            res.status(201).json(savedGroup);
+        } catch (err) {
+            const error: HttpError = createErrorBadRequest(err);
+            throw error;
+        }
     }
-};
 
-const putGroupById: (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-) => Promise<void> = async (req, res, next) => {
-    const id: string = req.params.id;
-    const reqGroup: Group = req.body;
+    @errorHandled
+    async postAddUsersToGroup(req: express.Request, res: express.Response) {
+        const groupId: string = req.params.id;
+        const userIds: string[] = req.body;
 
-    try {
-        const result: SeqUpdateResponse<Group> = await groupService.updateGroup(
-            id,
-            reqGroup
-        );
-        res.status(200).json(result);
-    } catch (err) {
-        const error: HttpError = createErrorBadRequest(err);
-        next(error);
+        try {
+            const result = await groupService.addUsersToGroup(groupId, userIds);
+            res.status(200).json(result);
+        } catch (err) {
+            const error: HttpError = createErrorBadRequest(err);
+            throw error;
+        }
     }
-};
 
-const deleteGroupById: (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-) => Promise<void> = async (req, res, next) => {
-    const id: string = req.params.id;
+    @errorHandled
+    async putGroupById(req: express.Request, res: express.Response) {
+        const id: string = req.params.id;
+        const reqGroup: Group = req.body;
 
-    try {
-        const result: number = await groupService.deleteGroup(id);
-        res.status(200).json(result);
-    } catch (error) {
-        next(errorNotFoundById);
+        try {
+            const result: SeqUpdateResponse<Group> = await groupService.updateGroup(
+                id,
+                reqGroup
+            );
+            res.status(200).json(result);
+        } catch (err) {
+            const error: HttpError = createErrorBadRequest(err);
+            throw error;
+        }
     }
-};
+
+    @errorHandled
+    async deleteGroupById(req: express.Request, res: express.Response) {
+        const id: string = req.params.id;
+
+        try {
+            const result: number = await groupService.deleteGroup(id);
+            res.status(200).json(result);
+        } catch (error) {
+            throw errorNotFoundById;
+        }
+    }
+}
+
+const groupsController: GroupsController = new GroupsController();
 
 export const groupsRouter: express.Router = express.Router();
 
-groupsRouter.get('/:id', getById);
-groupsRouter.get('/', getAllGroups);
-groupsRouter.post('/addUsersToGroup/:id', postAddUsersToGroup);
-groupsRouter.post('/', postGroup);
-groupsRouter.put('/:id', putGroupById);
-groupsRouter.delete('/:id', deleteGroupById);
+groupsRouter.get('/:id', groupsController.getById);
+groupsRouter.get('/', groupsController.getAllGroups);
+groupsRouter.post('/addUsersToGroup/:id', groupsController.postAddUsersToGroup);
+groupsRouter.post('/', groupsController.postGroup);
+groupsRouter.put('/:id', groupsController.putGroupById);
+groupsRouter.delete('/:id', groupsController.deleteGroupById);
