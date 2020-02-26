@@ -1,8 +1,7 @@
 import express from 'express';
 
 import { usersRouter, groupsRouter } from './controllers/index';
-import { logger } from './logger';
-import { HttpError } from './utils/index';
+import { HttpError, logger } from './utils/index';
 
 const app: express.Express = express();
 const port: string = process.env.PORT || '3000';
