@@ -4,7 +4,8 @@ import { GroupDAO } from '../data-access/index';
 import { GroupsModel } from '../models/index';
 import { Group, SeqUpdateResponse } from '../interfaces/index';
 import { GroupService } from '../services/index';
-import { HttpError, errorHandled } from '../utils/index';
+import { HttpError } from '../utils/index';
+import { errorHandled } from '../logging/index';
 
 export const groupDAO: GroupDAO = new GroupDAO(GroupsModel);
 const groupService = new GroupService(groupDAO);

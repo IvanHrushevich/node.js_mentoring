@@ -5,7 +5,8 @@ import { UserDAO } from '../data-access/index';
 import { UsersModel } from '../models/index';
 import { User, SeqUpdateResponse } from '../interfaces/index';
 import { groupDAO } from './groups';
-import { HttpError, errorHandled } from './../utils/index';
+import { HttpError } from './../utils/index';
+import { errorHandled } from '../logging/index';
 
 const userDAO: UserDAO = new UserDAO(UsersModel, groupDAO);
 const usersService = new UserService(userDAO);
