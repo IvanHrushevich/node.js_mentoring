@@ -9,10 +9,20 @@ export function errorHandler(
     res: express.Response,
     next: express.NextFunction
 ) {
-    if (err instanceof HttpError) {
-        res.status(err.status).send(err);
-    } else {
-        logger.error(`unexpected error: ${JSON.stringify(err)}`);
-        res.status(500).send(err);
+    let resultError: HttpError = err;
+    if (!(err instanceof HttpError)) {
+        resultError = new HttpError(500, 'Unexpected error', err);
     }
+
+    const errorMessage: string = `${resultError.title || ''}: ${JSON.stringify(
+        resultError.detail
+    )}`;
+
+    if (resultError.status < 500) {
+        logger.warn(errorMessage);
+    } else {
+        logger.error(errorMessage);
+    }
+
+    res.status(resultError.status).send(resultError);
 }
