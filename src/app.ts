@@ -2,7 +2,7 @@ import express from 'express';
 
 import { usersRouter, groupsRouter } from './controllers/index';
 import { requestLogger, logger } from './logging/index';
-import { errorHandler } from './middlewares/index';
+import { authentication, errorHandler, checkToken } from './middlewares/index';
 
 const app: express.Express = express();
 const port: string = process.env.PORT || '3000';
@@ -11,8 +11,10 @@ app.use(express.json());
 
 app.use(requestLogger);
 
-app.use('/users', usersRouter);
-app.use('/groups', groupsRouter);
+app.post('/login', authentication);
+
+app.use('/users', checkToken, usersRouter);
+app.use('/groups', checkToken, groupsRouter);
 
 app.use(errorHandler);
 

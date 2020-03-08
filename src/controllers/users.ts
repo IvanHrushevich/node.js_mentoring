@@ -9,7 +9,7 @@ import { HttpError } from './../utils/index';
 import { errorHandled } from '../logging/index';
 
 const userDAO: UserDAO = new UserDAO(UsersModel, groupDAO);
-const usersService = new UserService(userDAO);
+export const usersService = new UserService(userDAO);
 
 const errorNotFoundById: HttpError = new HttpError(
     404,

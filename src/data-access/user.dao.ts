@@ -54,6 +54,18 @@ export class UserDAO {
         return user;
     }
 
+    async getUserByName(login: string): Promise<User | null> {
+        let user: User | null = null;
+
+        try {
+            user = await this._usersModel.findOne({
+                where: { login }
+            });
+        } catch {}
+
+        return user;
+    }
+
     async saveUser(reqUser: UserCreateRequest): Promise<User> {
         const { login, password, age } = reqUser;
         const groupIds: string[] = reqUser.groups;

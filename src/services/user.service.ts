@@ -19,6 +19,10 @@ export class UserService {
         return this._userDAO.getUserById(id);
     }
 
+    getUserByName(name: string): Promise<User | null> {
+        return this._userDAO.getUserByName(name);
+    }
+
     getFilteredUsers(
         searchStr: string,
         limit: number | undefined
