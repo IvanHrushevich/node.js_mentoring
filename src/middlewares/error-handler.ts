@@ -12,7 +12,7 @@ export function errorHandler(
     if (err instanceof HttpError) {
         res.status(err.status).send(err);
     } else {
-        logger.error(`unhandled error: ${JSON.stringify(err)}`);
+        logger.error(`unexpected error: ${JSON.stringify(err)}`);
         res.status(500).send(err);
     }
 }

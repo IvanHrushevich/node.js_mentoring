@@ -16,12 +16,12 @@ export function errorHandled(
             const req: any = args[0];
             const nextFn: express.NextFunction = args[2];
 
-            logger.error(`[controller] method name: ${propertyName}`);
-            logger.error(`[controller] url: ${req.originalUrl}`);
-            logger.error(`[controller] method: ${req.method}`);
-            logger.error(`[controller] params: ${JSON.stringify(req.params)}`);
-            logger.error(`[controller] body: ${JSON.stringify(req.body)}`);
-            logger.error(`[controller] error message: ${err.message}`);
+            logger.warn(`[controller] method name: ${propertyName}`);
+            logger.warn(`[controller] url: ${req.originalUrl}`);
+            logger.warn(`[controller] method: ${req.method}`);
+            logger.warn(`[controller] params: ${JSON.stringify(req.params)}`);
+            logger.warn(`[controller] body: ${JSON.stringify(req.body)}`);
+            logger.warn(`[controller] error message: ${err.message}`);
 
             nextFn(err);
         }
