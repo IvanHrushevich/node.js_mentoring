@@ -1,9 +1,9 @@
 import express from 'express';
 import cors, { CorsOptions } from 'cors';
 
-import { usersRouter, groupsRouter } from './controllers/index';
+import { usersRouter, groupsRouter, loginRouter } from './controllers/index';
 import { requestLogger, logger } from './logging/index';
-import { authentication, errorHandler, checkToken } from './middlewares/index';
+import { errorHandler, checkToken } from './middlewares/index';
 
 const corsOptions: CorsOptions = {
     origin: '*',
@@ -19,8 +19,7 @@ app.use(express.json());
 
 app.use(requestLogger);
 
-app.post('/login', authentication);
-
+app.use('/login', loginRouter);
 app.use('/users', checkToken, usersRouter);
 app.use('/groups', checkToken, groupsRouter);
 
