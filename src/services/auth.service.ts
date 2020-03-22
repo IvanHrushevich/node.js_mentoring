@@ -5,7 +5,7 @@ import { HttpError } from '../utils';
 import { usersService } from '../controllers/index';
 import { SECRET } from '../middlewares/index';
 
-export class LoginService {
+export class AuthService {
     async authenticate(authForm: AuthForm): Promise<{ token: string }> {
         const invalidTokenError: HttpError = new HttpError(
             403,

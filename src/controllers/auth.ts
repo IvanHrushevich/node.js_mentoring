@@ -1,12 +1,12 @@
 import express from 'express';
 
 import { AuthForm } from '../interfaces/index';
-import { LoginService } from '../services/index';
+import { AuthService } from '../services/index';
 import { errorHandled } from '../logging/index';
 
-const loginService = new LoginService();
+const loginService = new AuthService();
 
-class LoginController {
+class AuthController {
     @errorHandled
     async postLogin(req: express.Request, res: express.Response): Promise<any> {
         const authForm: AuthForm = req.body;
@@ -23,8 +23,8 @@ class LoginController {
     }
 }
 
-const loginController: LoginController = new LoginController();
+const authController: AuthController = new AuthController();
 
-export const loginRouter: express.Router = express.Router();
+export const authRouter: express.Router = express.Router();
 
-loginRouter.post('/', loginController.postLogin);
+authRouter.post('/', authController.postLogin);
