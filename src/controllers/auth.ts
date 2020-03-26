@@ -16,14 +16,14 @@ class AuthController {
                 authForm
             );
 
-            res.status(200).json({ token });
+            res.status(200).json(token);
         } catch (error) {
             throw error;
         }
     }
 }
 
-const authController: AuthController = new AuthController();
+export const authController: AuthController = new AuthController();
 
 export const authRouter: express.Router = express.Router();
 
