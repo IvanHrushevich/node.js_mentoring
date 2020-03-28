@@ -1,6 +1,7 @@
 jest.mock('../logging/error-handled');
 jest.mock('../services/group.service');
-jest.mock('../services/auth.service');
+jest.mock('../models/groups.model');
+jest.mock('../data-access/group.dao');
 
 import { groupsController } from './groups';
 import { getMockRes, fakeGroup } from '../spec-utils/index';
