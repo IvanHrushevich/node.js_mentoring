@@ -6,7 +6,7 @@ import express from 'express';
 import { authController } from './auth';
 
 describe('Auth controller', () => {
-    test('should call res.status with 200 and res.json with token', async () => {
+    test('should call res.status with 200 and res.json with token on postLogin call', async () => {
         const mockReq = {
             body: {
                 login: 'testLogin',

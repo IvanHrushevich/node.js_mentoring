@@ -96,7 +96,7 @@ class GroupsController {
     }
 }
 
-const groupsController: GroupsController = new GroupsController();
+export const groupsController: GroupsController = new GroupsController();
 
 export const groupsRouter: express.Router = express.Router();
 
