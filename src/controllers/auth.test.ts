@@ -4,6 +4,7 @@ jest.mock('../services/auth.service');
 import express from 'express';
 
 import { authController } from './auth';
+import { getMockRes } from '../spec-utils/index';
 
 describe('Auth controller', () => {
     test('should call res.status with 200 and res.json with token on postLogin call', async () => {
@@ -13,12 +14,6 @@ describe('Auth controller', () => {
                 password: 'testPassword'
             }
         } as express.Request;
-        const getMockRes = () => {
-            const res: any = {};
-            res.status = jest.fn().mockReturnValue(res);
-            res.json = jest.fn().mockReturnValue(res);
-            return res;
-        };
         const mockRes = getMockRes();
 
         await authController.postLogin(mockReq, mockRes);
