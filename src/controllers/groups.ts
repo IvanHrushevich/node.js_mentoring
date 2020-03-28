@@ -42,7 +42,7 @@ class GroupsController {
 
     @errorHandled
     async postGroup(req: express.Request, res: express.Response) {
-        const group = req.body;
+        const group: Group = req.body;
 
         try {
             const savedGroup: Group = await groupService.saveGroup(group);

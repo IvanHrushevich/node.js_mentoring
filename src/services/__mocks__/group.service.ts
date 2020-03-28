@@ -10,8 +10,8 @@ export class GroupService {
         return Promise.resolve([fakeGroup]);
     }
 
-    saveGroup(): Promise<Group> {
-        return Promise.resolve(fakeGroup);
+    saveGroup(group: Group): Promise<Group> {
+        return Promise.resolve({ ...group, id: 'fakeId' });
     }
 
     updateGroup(): Promise<SeqUpdateResponse<Group>> {
