@@ -5,10 +5,9 @@ jest.mock('../data-access/group.dao');
 
 import { groupsController } from './groups';
 import { getMockRes, fakeGroup } from '../spec-utils/index';
-import { Group } from '../interfaces/group.model';
-import { SeqUpdateResponse } from '../interfaces/seq-update-response';
+import { Group, SeqUpdateResponse } from '../interfaces/index';
 
-describe('Groups controller', () => {
+describe('GroupsController', () => {
     const mockRes = getMockRes();
 
     beforeEach(() => {

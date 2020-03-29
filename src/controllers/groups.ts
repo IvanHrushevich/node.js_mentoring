@@ -2,8 +2,7 @@ import express from 'express';
 
 import { GroupDAO } from '../data-access/group.dao';
 import { GroupsModel } from '../models/groups.model';
-import { Group } from '../interfaces/group.model';
-import { SeqUpdateResponse } from '../interfaces/seq-update-response';
+import { Group, SeqUpdateResponse } from '../interfaces/index';
 import { GroupService } from '../services/group.service';
 import { HttpError } from '../utils/http-error';
 import { errorHandled } from '../logging/error-handled';
