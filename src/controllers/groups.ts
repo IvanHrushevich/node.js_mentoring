@@ -1,11 +1,11 @@
 import express from 'express';
 
-import { GroupDAO } from '../data-access/index';
-import { GroupsModel } from '../models/index';
+import { GroupDAO } from '../data-access/group.dao';
+import { GroupsModel } from '../models/groups.model';
 import { Group, SeqUpdateResponse } from '../interfaces/index';
-import { GroupService } from '../services/index';
-import { HttpError } from '../utils/index';
-import { errorHandled } from '../logging/index';
+import { GroupService } from '../services/group.service';
+import { HttpError } from '../utils/http-error';
+import { errorHandled } from '../logging/error-handled';
 
 export const groupDAO: GroupDAO = new GroupDAO(GroupsModel);
 const groupService = new GroupService(groupDAO);
@@ -41,7 +41,7 @@ class GroupsController {
 
     @errorHandled
     async postGroup(req: express.Request, res: express.Response) {
-        const group = req.body;
+        const group: Group = req.body;
 
         try {
             const savedGroup: Group = await groupService.saveGroup(group);
@@ -96,7 +96,7 @@ class GroupsController {
     }
 }
 
-const groupsController: GroupsController = new GroupsController();
+export const groupsController: GroupsController = new GroupsController();
 
 export const groupsRouter: express.Router = express.Router();
 

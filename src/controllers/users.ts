@@ -1,12 +1,12 @@
 import express from 'express';
 
-import { UserService } from '../services/index';
-import { UserDAO } from '../data-access/index';
-import { UsersModel } from '../models/index';
+import { UserService } from '../services/user.service';
+import { UserDAO } from '../data-access/user.dao';
+import { UsersModel } from '../models/users.model';
 import { User, SeqUpdateResponse } from '../interfaces/index';
 import { groupDAO } from './groups';
-import { HttpError } from './../utils/index';
-import { errorHandled } from '../logging/index';
+import { HttpError } from './../utils/http-error';
+import { errorHandled } from '../logging/error-handled';
 
 const userDAO: UserDAO = new UserDAO(UsersModel, groupDAO);
 export const usersService = new UserService(userDAO);
@@ -96,7 +96,7 @@ class UsersController {
     }
 }
 
-const usersController: UsersController = new UsersController();
+export const usersController: UsersController = new UsersController();
 
 export const usersRouter: express.Router = express.Router();
 

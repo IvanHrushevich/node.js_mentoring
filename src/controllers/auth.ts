@@ -4,7 +4,7 @@ import { AuthForm } from '../interfaces/index';
 import { AuthService } from '../services/index';
 import { errorHandled } from '../logging/index';
 
-const loginService = new AuthService();
+const authService = new AuthService();
 
 class AuthController {
     @errorHandled
@@ -12,18 +12,18 @@ class AuthController {
         const authForm: AuthForm = req.body;
 
         try {
-            const token: { token: string } = await loginService.authenticate(
+            const token: { token: string } = await authService.authenticate(
                 authForm
             );
 
-            res.status(200).json({ token });
+            res.status(200).json(token);
         } catch (error) {
             throw error;
         }
     }
 }
 
-const authController: AuthController = new AuthController();
+export const authController: AuthController = new AuthController();
 
 export const authRouter: express.Router = express.Router();
 
